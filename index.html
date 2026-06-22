@@ -247,7 +247,7 @@
           </div>
         </div>
       </div>
-      <div class="demo-footer">Sync runs the full check. Switch to Async and the Expected Payload box disappears instantly — only HTTP and MPL status matter. Switch to Match Payload Async and it's a single GET, compared straight against the response body — no MPL involved. No endpoint handy? A ready-made utility iFlow ships with the page for exactly this — download it, deploy it, point the test at it.</div>
+      <div class="demo-footer">Sync runs the full check. Switch to Async and the Expected Payload box disappears instantly — only HTTP and MPL status matter. Switch to Match Payload Async and it's a single GET, compared straight against the response body — no MPL involved. If a payload doesn't match, CIM shows exactly what's missing, extra, or different — not just pass/fail. No endpoint handy? A ready-made utility iFlow ships with the page for exactly this — download it, deploy it, point the test at it. Note: the utility iFlow only reads Data Store PAYLOAD, Entry ID match — your own process needs to write the result there first.</div>
     </div>
   </div>
 </section>
@@ -338,7 +338,7 @@ const FEATURES = [
     "Sender search: type a sender name and press Enter to filter. Press Escape or click ✕ to clear.",
     "Receiver search: same behaviour as Sender search.",
     "Sender and Receiver columns in the message table are clickable — instantly filters to all messages from/to that system.",
-    "Custom Status search: type any custom status value and press Enter to filter the table in place, positioned after Receiver in the filter bar.",
+    "Custom Status search: type any custom status value and press Enter to filter — searched server-side across the full selected date range, not just the currently loaded page, positioned after Receiver in the filter bar.",
     "Custom Status values in the table are still clickable — navigates to Message Journey filtered by that custom status.",
     "Custom Status is included in Saved Views.",
     "Top Failed iFlows: shown independently below the message table — from the latest 2500 failed messages for the selected range.",
@@ -355,7 +355,7 @@ const FEATURES = [
     "Context switch: select ☁️ Cloud or 🌐 Edge in the header. Switches clear all message caches.",
     "Cloud-only pages (Artifacts, JMS, Certificates, Idle iFlows, Dependency, Version Compare) are blocked with a clear message in Edge context. Nav items appear dimmed.",
     "Recent Messages table includes a Log End column — same format as Cloud Monitoring. Column widths optimised: Log End 75px, Application Message ID 130px, Correlation ID single line with ellipsis.",
-    "Custom Status search filter — same as Cloud Monitoring, filters table in place. Included in Saved Views."
+    "Custom Status search filter — same as Cloud Monitoring, searched server-side across the full date range. Included in Saved Views."
   ]},
   { group: "Monitoring", icon: "🧭", title: "Message Journey", tag: "Trace any message by Correlation ID, Message ID or Custom Status.", points: [
     "Trace messages by Correlation ID, Message ID, Application Message ID, or Custom Status.",
@@ -383,10 +383,21 @@ const FEATURES = [
     "Runtime status is cross-referenced live so you can immediately see if a locked artifact is blocking a deployment or is already deployed."
   ]},
   { group: "Artifacts", icon: "📋", title: "Artifact Overview — Undeploy History Tab", tag: "A built-in audit trail of every undeploy you've run.", points: [
-    "Shows up to 10 unique artifacts you undeployed — artifact name, type, deployed on, and undeployed at timestamps.",
+    "Shows up to 20 unique artifacts you undeployed — artifact name, type, deployed on, and undeployed at timestamps.",
     "If the same artifact is undeployed multiple times, up to 5 timestamps are shown per row separated by line breaks (latest first).",
     "Stored in chrome.storage.local per tenant — survives browser cache clear.",
     "Clear History button removes all entries."
+  ]},
+  { group: "Artifacts", icon: "📦", title: "Packages", tag: "Every package and artifact, browsable and exportable, inside CIM.", points: [
+    "Browse every integration package and its artifacts from a dedicated page inside CIM — the same data shown on SAP's design page, without leaving the panel.",
+    "Type filter covers every SAP artifact type: Integration Flow, Integration Adapter, Message Mapping, Value Mapping, Script Collection, API, Function Library, Imported Archives, Data Type, Message Type, and Service Interface.",
+    "Status filter: All, Deployed, Not Deployed, or Error — combine with the type filter and free-text search.",
+    "Search box matches against package name, artifact name, or artifact type at once.",
+    "Deployed status badge with version number shown next to every artifact, refreshed on demand.",
+    "Export CSV and Export Excel — respects whatever filters and search are currently active.",
+    "Saved Views: save any combination of type, status, and search as a named view, restore it in one click.",
+    "Manual refresh clears the package and runtime cache so you always see current deployment state.",
+    "Cloud only — blocked in Edge context, since package design data is a Cloud Integration concept."
   ]},
   { group: "Artifacts", icon: "⚙️", title: "Artifact Runtime", tag: "Status filter cards and a 7-day executed-iFlows view.", points: [
     "Search box: type any iFlow name, package name, type or status to filter the list instantly.",
@@ -477,11 +488,13 @@ const FEATURES = [
     "Two separate test types: Match Payload Async (max 1) and regular Test Cases (max 25) — both run against your SAP CPI tenant directly from the browser.",
     "Shared Username and Password: one login saved per tenant — used automatically by every test case. Auto-fills on page open. Password stored using AES-GCM encryption, never in plain text.",
     "Match Payload Async: a single GET endpoint is called once and its raw HTTP response is compared directly against the Expected Payload box — no MPL or iFlow processing status is checked, only the response body.",
+    "If using the bundled utility iFlow, this test depends on a value already being written to Data Store PAYLOAD, Entry ID match, before you run it — typically by your own business iFlow producing that result first. The utility iFlow only reads (and deletes) the entry; it doesn't generate one itself.",
     "Don't have an endpoint? Click Download Utility iFlow for a ready-made SAP CPI iFlow package — import, deploy, point the test at it.",
     "Regular Test Cases — Sync interface: full comparison — HTTP status, iFlow processing (MPL) status, and the response payload against Expected Payload.",
     "Regular Test Cases — Async interface: checks only HTTP status and MPL status — the Expected Payload box is hidden and skipped, switching instantly when you change the dropdown.",
     "Run Selected: tick any combination and run them in one click — each row shows a live ⏳ Running… status, then updates in place to ✅/❌.",
     "Result panel shows: HTTP status vs expected, iFlow processing status, payload match result, and every related iFlow triggered for that message with its own status — Correlation ID and Message ID are clickable links into SAP CPI Monitoring.",
+    "Failed payload comparisons show exactly what's wrong, not just pass/fail — missing fields, extra fields, and fields with a different value than expected, broken down field by field for JSON and line by line for XML/text.",
     "Copy Selected, Download Selected (Excel), and Delete Selected — bulk actions for ticked test cases.",
     "Test cases stored per tenant in chrome.storage.local — each tenant has its own independent set. Survives browser cache clear."
   ]},
@@ -530,6 +543,12 @@ const FEATURES = [
     "Edge OData Virtual URL: configured per-tenant, stored AES-encrypted — never readable as plain text.",
     "Storage guard: all localStorage writes check available space before saving — auto-evicts old design artifact cache entries past 4.5MB.",
     "All critical data (test cases, saved views, tags, thresholds, undeploy history, dependency filter, design cache) stored in chrome.storage.local per tenant — never lost when clearing browser cache."
+  ]},
+  { group: "Account", icon: "🆕", title: "What's New", tag: "A running changelog, built right into the sidebar.", points: [
+    "A permanent tab in the sidebar — always accessible, even after a trial expires.",
+    "Lists every release with what changed, newest version first.",
+    "No popups, no dismissing — revisit anytime to see what's changed since you last checked.",
+    "This page (cpimonitoring.github.io) is the full feature reference; What's New inside CIM is just the changelog."
   ]}
 ];
 
