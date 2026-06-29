@@ -21,16 +21,30 @@
     --green:#34d399;
     --amber:#f5b945;
     --red:#f0625f;
+    --violet:#a78bfa;
+    --violet-bright:#c4b5fd;
+    --cyan:#22d3ee;
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
-  body{margin:0; background:var(--bg); color:var(--text); font-family:'IBM Plex Sans', -apple-system, Segoe UI, sans-serif; -webkit-font-smoothing:antialiased;}
+  body{margin:0; background:var(--bg); color:var(--text); font-family:'IBM Plex Sans', -apple-system, Segoe UI, sans-serif; -webkit-font-smoothing:antialiased; position:relative;}
   @media (prefers-reduced-motion: reduce){ *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;} }
+
+  /* Ambient signal-color mesh — echoes the CIM button's own health-state colors */
+  body::before{
+    content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(circle at 14% 8%, rgba(52,211,153,0.10), transparent 40%),
+      radial-gradient(circle at 86% 18%, rgba(47,143,224,0.14), transparent 42%),
+      radial-gradient(circle at 70% 70%, rgba(167,139,250,0.08), transparent 45%),
+      radial-gradient(circle at 10% 85%, rgba(245,185,69,0.06), transparent 40%);
+  }
 
   .mono{font-family:'IBM Plex Mono', 'SF Mono', Consolas, monospace;}
   h1,h2,h3{margin:0; font-weight:600; letter-spacing:-0.01em;}
   a{color:inherit;}
-  .eyebrow{font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--blue-bright);}
+  .eyebrow{font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--blue-bright); display:inline-flex; align-items:center; gap:8px;}
+  .eyebrow::before{content:""; width:6px; height:6px; border-radius:50%; background:currentColor; box-shadow:0 0 0 3px rgba(95,180,255,0.18);}
 
   .wrap{max-width:1080px; margin:0 auto; padding:0 28px;}
   section{padding:88px 0;}
@@ -39,33 +53,43 @@
   .nav{position:sticky; top:0; z-index:50; background:rgba(7,13,26,0.86); backdrop-filter:blur(10px); border-bottom:1px solid var(--line);}
   .nav .wrap{display:flex; align-items:center; justify-content:space-between; padding:14px 28px;}
   .nav-brand{display:flex; align-items:center; gap:10px; font-weight:600; font-size:15px;}
-  .nav-logo{width:26px; height:26px; border-radius:7px; background:linear-gradient(135deg,#2f8fe0,#1c4f8a); display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:700;}
+  .nav-logo{width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg,#34d399 0%,#2f8fe0 48%,#a78bfa 100%); display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:700; color:#04101f; box-shadow:0 0 0 1px rgba(255,255,255,0.12) inset;}
   .nav-links{display:flex; gap:28px; font-size:14px; color:var(--text-dim);}
   .nav-links a{text-decoration:none; transition:color .15s;}
   .nav-links a:hover{color:var(--text);}
-  .nav-cta{font-size:13px; padding:8px 16px; border-radius:7px; background:var(--blue); color:#fff; text-decoration:none; font-weight:600; transition:background .15s;}
-  .nav-cta:hover{background:var(--blue-bright);}
+  .nav-cta{font-size:13px; padding:8px 16px; border-radius:7px; background:linear-gradient(135deg,var(--blue),#1c4f8a); color:#fff; text-decoration:none; font-weight:600; transition:filter .15s, transform .12s; box-shadow:0 4px 14px rgba(47,143,224,0.3);}
+  .nav-cta:hover{filter:brightness(1.14); transform:translateY(-1px);}
   @media (max-width:720px){ .nav-links{display:none;} }
 
   .hero{padding:96px 0 64px; position:relative; overflow:hidden;}
-  .hero::before{content:""; position:absolute; top:-200px; right:-160px; width:600px; height:600px; background:radial-gradient(circle, rgba(47,143,224,0.16), transparent 70%); pointer-events:none;}
+  .hero::before{content:""; position:absolute; top:-220px; right:-180px; width:680px; height:680px; background:radial-gradient(circle, rgba(47,143,224,0.18), transparent 70%); pointer-events:none;}
+  .hero::after{content:""; position:absolute; bottom:-180px; left:-140px; width:480px; height:480px; background:radial-gradient(circle, rgba(52,211,153,0.10), transparent 70%); pointer-events:none;}
   .hero-grid{display:grid; grid-template-columns:1.1fr 0.9fr; gap:56px; align-items:center; position:relative;}
   @media (max-width:880px){ .hero-grid{grid-template-columns:1fr; gap:40px;} }
-  .hero h1{font-size:44px; line-height:1.12; margin:18px 0 18px;}
-  .hero h1 .accent{color:var(--blue-bright);}
+  .hero h1{font-size:46px; line-height:1.12; margin:18px 0 18px;}
+  .hero h1 .accent{background:linear-gradient(100deg,#5fb4ff,#34d399); -webkit-background-clip:text; background-clip:text; color:transparent;}
   .hero p.lead{font-size:17px; color:var(--text-dim); line-height:1.6; max-width:520px;}
   @media (max-width:560px){ .hero h1{font-size:32px;} }
   .hero-ctas{display:flex; gap:12px; margin-top:30px; flex-wrap:wrap;}
-  .btn{display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:8px; font-size:14px; font-weight:600; text-decoration:none; border:1px solid transparent; transition:transform .12s, background .15s, border-color .15s; cursor:pointer;}
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:8px; font-size:14px; font-weight:600; text-decoration:none; border:1px solid transparent; transition:transform .12s, background .15s, border-color .15s, box-shadow .15s; cursor:pointer;}
   .btn:active{transform:translateY(1px);}
-  .btn-primary{background:var(--blue); color:#fff;}
-  .btn-primary:hover{background:var(--blue-bright);}
+  .btn-primary{background:linear-gradient(135deg,var(--blue),#1c4f8a); color:#fff; box-shadow:0 6px 20px rgba(47,143,224,0.32);}
+  .btn-primary:hover{filter:brightness(1.1); transform:translateY(-1px);}
   .btn-ghost{background:transparent; color:var(--text); border-color:var(--line-strong);}
   .btn-ghost:hover{border-color:var(--blue-bright); color:var(--blue-bright);}
   .trial-note{margin-top:18px; font-size:13px; color:var(--text-faint); font-family:'IBM Plex Mono',monospace;}
   .trial-note b{color:var(--green);}
 
-  .button-stage{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:28px; position:relative; min-height:340px;}
+  /* Hero stat strip — quantifies the product's scope at a glance */
+  .hero-stats{display:flex; gap:28px; margin-top:34px; flex-wrap:wrap;}
+  .hero-stat b{display:block; font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:700; line-height:1;}
+  .hero-stat span{display:block; font-size:11.5px; color:var(--text-faint); margin-top:4px; letter-spacing:0.02em;}
+  .hero-stat:nth-child(1) b{color:var(--blue-bright);}
+  .hero-stat:nth-child(2) b{color:var(--green);}
+  .hero-stat:nth-child(3) b{color:var(--violet-bright);}
+  .hero-stat:nth-child(4) b{color:var(--amber);}
+
+  .button-stage{background:linear-gradient(165deg, var(--card), #0a1730 70%); border:1px solid var(--line); border-radius:16px; padding:28px; position:relative; min-height:340px; box-shadow:0 20px 50px -20px rgba(0,0,0,0.6);}
   .stage-label{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-faint); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:18px;}
   .stage-window{background:var(--bg-soft); border:1px solid var(--line); border-radius:10px; height:240px; position:relative; overflow:hidden;}
   .stage-window::before{content:"sap-integration-suite.cfapps.eu10.hana.ondemand.com"; position:absolute; top:0; left:0; right:0; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-faint); background:rgba(255,255,255,0.03); padding:7px 12px; border-bottom:1px solid var(--line);}
@@ -90,24 +114,25 @@
 
   .section-head{max-width:640px; margin-bottom:44px;}
   .section-head h2{font-size:30px; margin-top:12px;}
+  .section-head h2 .hl{color:var(--blue-bright);}
   .section-head p{color:var(--text-dim); font-size:15.5px; line-height:1.6; margin-top:10px;}
 
   .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
   @media (max-width:880px){ .grid{grid-template-columns:repeat(2,1fr);} }
   @media (max-width:560px){ .grid{grid-template-columns:1fr;} }
-  .feat{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px; transition:border-color .15s, transform .15s; cursor:pointer; text-align:left; width:100%; font-family:inherit; color:inherit;}
-  .feat:hover{border-color:var(--blue-bright); transform:translateY(-2px);}
-  .feat.is-open{border-color:var(--blue-bright); background:linear-gradient(160deg, rgba(47,143,224,0.10), var(--card) 65%);}
+  .feat{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--group-color, var(--blue)); border-radius:12px; padding:20px; transition:border-color .15s, transform .15s, box-shadow .15s; cursor:pointer; text-align:left; width:100%; font-family:inherit; color:inherit; position:relative;}
+  .feat:hover{border-color:var(--blue-bright); border-left-color:var(--group-color, var(--blue-bright)); transform:translateY(-2px); box-shadow:0 14px 30px -16px rgba(0,0,0,0.55);}
+  .feat.is-open{border-color:var(--blue-bright); border-left-color:var(--group-color, var(--blue-bright)); background:linear-gradient(160deg, color-mix(in srgb, var(--group-color, var(--blue)) 14%, transparent), var(--card) 65%);}
   .feat-top{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
-  .feat-icon{width:32px; height:32px; border-radius:8px; flex-shrink:0; background:rgba(47,143,224,0.14); border:1px solid rgba(47,143,224,0.3); display:flex; align-items:center; justify-content:center; font-size:14px;}
+  .feat-icon{width:32px; height:32px; border-radius:8px; flex-shrink:0; background:color-mix(in srgb, var(--group-color, var(--blue)) 18%, transparent); border:1px solid color-mix(in srgb, var(--group-color, var(--blue)) 38%, transparent); display:flex; align-items:center; justify-content:center; font-size:14px;}
   .feat-chevron{color:var(--text-faint); font-size:13px; transition:transform .2s; margin-top:6px;}
-  .feat.is-open .feat-chevron{transform:rotate(180deg); color:var(--blue-bright);}
+  .feat.is-open .feat-chevron{transform:rotate(180deg); color:var(--group-color, var(--blue-bright));}
   .feat h3{font-size:14.5px; margin:13px 0 6px;}
   .feat p.tag{font-size:13.5px; color:var(--text-dim); line-height:1.55; margin:0;}
 
-  .feat-detail{grid-column:1 / -1; display:none; background:var(--bg-soft); border:1px solid var(--blue-bright); border-radius:12px; padding:22px 24px; margin:-2px 0 4px;}
+  .feat-detail{grid-column:1 / -1; display:none; background:var(--bg-soft); border:1px solid var(--group-color, var(--blue-bright)); border-radius:12px; padding:22px 24px; margin:-2px 0 4px;}
   .feat-detail.is-visible{display:block;}
-  .feat-detail h4{font-size:15px; color:var(--blue-bright); margin-bottom:12px; font-family:'IBM Plex Mono',monospace;}
+  .feat-detail h4{font-size:15px; color:var(--group-color, var(--blue-bright)); margin-bottom:12px; font-family:'IBM Plex Mono',monospace;}
   .feat-detail ul{margin:0; padding-left:20px; columns:2; column-gap:32px;}
   @media (max-width:760px){ .feat-detail ul{columns:1;} }
   .feat-detail li{font-size:14px; color:var(--text); opacity:0.92; line-height:1.6; margin-bottom:11px; break-inside:avoid;}
@@ -115,11 +140,11 @@
   .feat-detail .close-btn{font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--text-faint); background:none; border:1px solid var(--line-strong); border-radius:6px; padding:5px 12px; cursor:pointer;}
   .feat-detail .close-btn:hover{color:var(--text); border-color:var(--text-faint);}
 
-  .demo{background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden;}
+  .demo{background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden; box-shadow:0 20px 50px -28px rgba(0,0,0,0.6);}
   .demo-tabs{display:flex; border-bottom:1px solid var(--line); background:rgba(255,255,255,0.02);}
   .demo-tab{flex:1; padding:13px 10px; text-align:center; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-faint); border-right:1px solid var(--line);}
   .demo-tab:last-child{border-right:none;}
-  .demo-tab.active{color:var(--blue-bright); background:rgba(47,143,224,0.08);}
+  .demo-tab.active{color:var(--blue-bright); background:rgba(47,143,224,0.08); box-shadow:inset 0 -2px 0 var(--blue-bright);}
   .demo-body{padding:22px; display:grid; grid-template-columns:1fr 1fr; gap:18px;}
   @media (max-width:680px){ .demo-body{grid-template-columns:1fr;} }
   .demo-col h4{font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-faint); margin-bottom:10px; font-family:'IBM Plex Mono',monospace;}
@@ -133,13 +158,16 @@
 
   .price-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
   @media (max-width:680px){ .price-grid{grid-template-columns:1fr;} }
-  .price-card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:28px;}
-  .price-card.highlight{border-color:rgba(47,143,224,0.45); background:linear-gradient(160deg, rgba(47,143,224,0.08), var(--card) 60%);}
-  .price-tag{font-family:'IBM Plex Mono',monospace; font-size:34px; font-weight:700; margin:10px 0 4px;}
+  .price-card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:28px; transition:transform .15s, box-shadow .15s;}
+  .price-card:hover{transform:translateY(-3px); box-shadow:0 20px 44px -24px rgba(0,0,0,0.6);}
+  .price-card.highlight{border-color:rgba(167,139,250,0.45); background:linear-gradient(160deg, rgba(167,139,250,0.10), var(--card) 60%);}
+  .price-tag{font-family:'IBM Plex Mono',monospace; font-size:34px; font-weight:700; margin:10px 0 4px; background:linear-gradient(100deg,var(--green),var(--blue-bright)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .price-card.highlight .price-tag{background:linear-gradient(100deg,var(--violet-bright),var(--blue-bright)); -webkit-background-clip:text; background-clip:text;}
   .price-sub{font-size:12.5px; color:var(--text-faint); margin-bottom:18px;}
   .price-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;}
   .price-list li{font-size:13.5px; color:var(--text-dim); display:flex; gap:9px; align-items:flex-start;}
   .price-list li::before{content:"—"; color:var(--blue-bright); flex-shrink:0;}
+  .price-card.highlight .price-list li::before{color:var(--violet-bright);}
 
   .steps{display:flex; flex-direction:column; gap:0;}
   .step{display:grid; grid-template-columns:48px 1fr; gap:18px; padding:22px 0; border-bottom:1px solid var(--line);}
@@ -158,7 +186,8 @@
   .pill{display:inline-flex; align-items:center; gap:6px; font-family:'IBM Plex Mono',monospace; font-size:11.5px; padding:4px 10px; border-radius:20px; border:1px solid var(--line-strong); color:var(--text-dim);}
   .pill b{color:var(--text);}
 
-  .group-label{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-faint); margin:36px 0 14px; grid-column:1/-1;}
+  .group-label{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-faint); margin:36px 0 14px; grid-column:1/-1; display:flex; align-items:center; gap:8px;}
+  .group-label::before{content:""; width:7px; height:7px; border-radius:50%; background:var(--group-color, var(--blue-bright));}
   .group-label:first-of-type{margin-top:0;}
 </style>
 </head>
@@ -188,6 +217,12 @@
         <a class="btn btn-ghost" href="#features">See what it does</a>
       </div>
       <div class="trial-note">$ trial --days 30 &nbsp;→&nbsp; <b>full access, no card required</b></div>
+      <div class="hero-stats">
+        <div class="hero-stat"><b>26</b><span>features, one panel</span></div>
+        <div class="hero-stat"><b>7</b><span>resource groups covered</span></div>
+        <div class="hero-stat"><b>3</b><span>test-case engines built in</span></div>
+        <div class="hero-stat"><b>0</b><span>extra tools to open</span></div>
+      </div>
     </div>
     <div class="button-stage">
       <div class="stage-label">// live on every SAP CPI page</div>
@@ -209,7 +244,7 @@
   <div class="wrap">
     <div class="section-head">
       <span class="eyebrow">Everything in one panel</span>
-      <h2>One extension, every tenant resource.</h2>
+      <h2>One extension, every <span class="hl">tenant resource</span>.</h2>
       <p>Click any card below for the full feature breakdown — exactly what's in the extension, no more, no less.</p>
     </div>
     <div class="grid" id="featureGrid"></div>
@@ -341,6 +376,7 @@ const FEATURES = [
     "Custom Status search: type any custom status value and press Enter to filter — searched server-side across the full selected date range, not just the currently loaded page, positioned after Receiver in the filter bar.",
     "Custom Status values in the table are still clickable — navigates to Message Journey filtered by that custom status.",
     "Custom Status is included in Saved Views.",
+    "Custom Header filter (low/medium volume tenants only): filter by a custom header Name + Header Value together — combines with Sender, Receiver, Custom Status and iFlow filters. Included in Saved Views.",
     "Top Failed iFlows: shown independently below the message table — from the latest 2500 failed messages for the selected range.",
     "Saved Views: save any combination of range, status, iFlow(s), sender, receiver, and page size as a named view.",
     "Export CSV (current page), Export Excel (.xlsx), Export All CSV (all pages server-side).",
@@ -360,6 +396,7 @@ const FEATURES = [
   { group: "Monitoring", icon: "🧭", title: "Message Journey", tag: "Trace any message by Correlation ID, Message ID or Custom Status.", points: [
     "Trace messages by Correlation ID, Message ID, Application Message ID, or Custom Status.",
     "Detail panel shows: iFlow, Package, Status, Duration, Log Level, Sender, Receiver, Message ID, Correlation ID, Application Message ID, Custom Status.",
+    "Show Custom Headers button on the Message Details panel — fetches and displays all custom header Name/Value pairs for the selected message on demand.",
     "Message ID and Correlation ID are clickable links — opens SAP CPI Monitoring in a new tab, automatically filtered to that identifier.",
     "Standard mode: server-side OData exact match by Correlation ID or Message ID.",
     "Advanced mode: client-side filter by Application Message ID, Application Type, or Custom Status.",
@@ -556,11 +593,26 @@ const grid = document.getElementById('featureGrid');
 let openIndex = null;
 let groupSeen = new Set();
 
+// Each resource group gets its own accent — a quiet way to let the eye
+// group 26 cards into 7 categories without re-reading every label.
+const GROUP_COLORS = {
+  "Monitoring":      "#5fb4ff",
+  "Artifacts":       "#34d399",
+  "Infrastructure":  "#f5b945",
+  "Cross-tenant":    "#a78bfa",
+  "Test automation": "#22d3ee",
+  "Utilities":       "#f0625f",
+  "Account":         "#c4b5fd"
+};
+
 FEATURES.forEach((f, i) => {
+  const groupColor = GROUP_COLORS[f.group] || "#5fb4ff";
+
   if (!groupSeen.has(f.group)) {
     groupSeen.add(f.group);
     const label = document.createElement('div');
     label.className = 'group-label';
+    label.style.setProperty('--group-color', groupColor);
     label.textContent = f.group;
     grid.appendChild(label);
   }
@@ -568,6 +620,7 @@ FEATURES.forEach((f, i) => {
   const card = document.createElement('button');
   card.className = 'feat';
   card.setAttribute('data-index', i);
+  card.style.setProperty('--group-color', groupColor);
   card.innerHTML =
     '<div class="feat-top"><div class="feat-icon">' + f.icon + '</div><div class="feat-chevron">▾</div></div>' +
     '<h3>' + f.title + '</h3>' +
@@ -576,6 +629,7 @@ FEATURES.forEach((f, i) => {
   const detail = document.createElement('div');
   detail.className = 'feat-detail';
   detail.setAttribute('data-index', i);
+  detail.style.setProperty('--group-color', groupColor);
   detail.innerHTML =
     '<h4>// ' + f.title + '</h4>' +
     '<ul>' + f.points.map(p => '<li>' + p + '</li>').join('') + '</ul>' +
