@@ -135,7 +135,6 @@
       <div class="page-tabs" id="pageTabs">
         <div class="page-tab active" data-page="upi">UPI Requests</div>
         <div class="page-tab" data-page="licenses">Licenses</div>
-        <div class="page-tab" data-page="trials">Trials</div>
       </div>
 
       <div id="upiPage">
@@ -161,14 +160,6 @@
         <div id="licensesSummary" class="summary-row"></div>
         <div id="licensesTableContainer"></div>
       </div>
-
-      <div id="trialsPage" style="display:none;">
-        <div class="search-row">
-          <input id="trialSearchInput" class="search-input" placeholder="Search by install ID..." />
-        </div>
-        <div id="trialsSummary" class="summary-row"></div>
-        <div id="trialsTableContainer"></div>
-      </div>
     </div>
   </div>
 
@@ -177,7 +168,6 @@
   let adminPassword = "";
   let allRequests = [];
   let allLicenses = [];
-  let allTrials = [];
   let currentFilter = "pending";
   let currentLicenseFilter = "all";
   let currentPage = "upi";
@@ -237,13 +227,6 @@
     allLicenses = data.licenses || [];
     lastRefreshed.textContent = "Last updated: " + new Date().toLocaleTimeString();
     renderLicenses();
-  }
-
-  async function loadTrials() {
-    const data = await apiCall("/admin/trials");
-    allTrials = data.trials || [];
-    lastRefreshed.textContent = "Last updated: " + new Date().toLocaleTimeString();
-    renderTrials();
   }
 
   function renderUpi() {
@@ -365,51 +348,6 @@
     });
   }
 
-  function renderTrials() {
-    const search = (document.getElementById("trialSearchInput").value || "").trim().toLowerCase();
-
-    let filtered = allTrials;
-    if (search) {
-      filtered = filtered.filter(t => t.installId.toLowerCase().includes(search));
-    }
-
-    const total = allTrials.length;
-    const stillActive = allTrials.filter(t => t.daysRemaining > 0).length;
-    const expired = total - stillActive;
-
-    document.getElementById("trialsSummary").innerHTML = `
-      <div class="summary-card"><span class="num">${total}</span>Total Installs</div>
-      <div class="summary-card"><span class="num" style="color:#4ade80;">${stillActive}</span>Active Trials</div>
-      <div class="summary-card"><span class="num" style="color:#f87171;">${expired}</span>Expired</div>
-    `;
-
-    const container = document.getElementById("trialsTableContainer");
-
-    if (filtered.length === 0) {
-      container.innerHTML = `<div class="empty">No matching trial installs.</div>`;
-      return;
-    }
-
-    const rows = filtered.map(t => {
-      const date = t.startedAt ? new Date(t.startedAt).toLocaleString() : "—";
-      const daysColor = t.daysRemaining > 0 ? "#4ade80" : "#f87171";
-      return `
-        <tr>
-          <td class="mono">${escapeHtml(t.installId)}</td>
-          <td class="small-muted">${date}</td>
-          <td style="color:${daysColor}; font-weight:600;">${t.daysRemaining}</td>
-        </tr>`;
-    }).join("");
-
-    container.innerHTML = `
-      <table>
-        <thead>
-          <tr><th>Anchor (Install ID or Company Prefix)</th><th>Trial Started</th><th>Days Remaining</th></tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>`;
-  }
-
   async function handleAction(action, transactionId, btn) {
     const confirmMsg = action === "approve"
       ? "Approve this request and create a license key?"
@@ -460,17 +398,14 @@
     document.querySelectorAll(".page-tab").forEach(t => t.classList.toggle("active", t.dataset.page === page));
     document.getElementById("upiPage").style.display = page === "upi" ? "block" : "none";
     document.getElementById("licensesPage").style.display = page === "licenses" ? "block" : "none";
-    document.getElementById("trialsPage").style.display = page === "trials" ? "block" : "none";
 
-    const titles = { upi: "💳 UPI Payment Requests", licenses: "🔑 Licenses", trials: "⏳ Trial Installs" };
+    const titles = { upi: "💳 UPI Payment Requests", licenses: "🔑 Licenses" };
     document.getElementById("pageTitle").textContent = titles[page];
 
     if (page === "upi" && allRequests.length === 0) loadRequests();
     if (page === "licenses" && allLicenses.length === 0) loadLicenses();
-    if (page === "trials" && allTrials.length === 0) loadTrials();
 
     if (page === "licenses") renderLicenses();
-    if (page === "trials") renderTrials();
   }
 
   document.getElementById("loginBtn").addEventListener("click", login);
@@ -481,7 +416,6 @@
   document.getElementById("refreshBtn").addEventListener("click", () => {
     if (currentPage === "upi") loadRequests();
     if (currentPage === "licenses") loadLicenses();
-    if (currentPage === "trials") loadTrials();
   });
 
   document.getElementById("filterTabs").addEventListener("click", (e) => {
@@ -509,7 +443,6 @@
   });
 
   document.getElementById("licenseSearchInput").addEventListener("input", renderLicenses);
-  document.getElementById("trialSearchInput").addEventListener("input", renderTrials);
 
   // Try to restore session (password kept only in sessionStorage, cleared on tab close)
   const savedPw = sessionStorage.getItem("cim_admin_pw");
