@@ -325,6 +325,10 @@
         actions = `<button class="btn green" data-license-action="reactivate" data-key="${escapeHtml(l.licenseKey)}">Reactivate</button>`;
       }
 
+      if (l.orderid) {
+        actions += ` <button class="btn" data-view-order="${escapeHtml(l.orderid)}">View Order</button>`;
+      }
+
       return `
         <tr>
           <td class="mono">${escapeHtml(l.licenseKey)}${sourceTag}${linked}</td>
@@ -346,6 +350,57 @@
     container.querySelectorAll("[data-license-action]").forEach(btn => {
       btn.addEventListener("click", () => handleLicenseAction(btn.dataset.licenseAction, btn.dataset.key, btn));
     });
+
+    container.querySelectorAll("[data-view-order]").forEach(btn => {
+      btn.addEventListener("click", () => showOrderDetails(btn.dataset.viewOrder, btn));
+    });
+  }
+
+  async function showOrderDetails(orderId, btn) {
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "Loading...";
+
+    try {
+      const data = await apiCall("/admin/order-details", { orderId });
+      const o = data.order;
+
+      const rows = [
+        ["Order #", o.orderNumber],
+        ["Customer", `${o.customerName} (${o.customerEmail})`],
+        ["Product", o.variantName ? `${o.productName} — ${o.variantName}` : o.productName],
+        ["Status", o.statusFormatted + (o.testMode ? " (test mode)" : "")],
+        ["Total", `${o.totalFormatted} ${o.currency}`],
+        ["Subtotal", o.subtotalFormatted],
+        ["Discount", o.discountTotalFormatted],
+        ["Tax", o.taxFormatted],
+        ["Refunded", o.refunded ? `Yes (${new Date(o.refundedAt).toLocaleString()})` : "No"],
+        ["Created", new Date(o.createdAt).toLocaleString()],
+        ["Order ID", o.identifier],
+      ].map(([label, value]) => `
+        <tr><td class="small-muted" style="width:120px;">${escapeHtml(label)}</td><td>${escapeHtml(String(value))}</td></tr>
+      `).join("");
+
+      const overlay = document.createElement("div");
+      overlay.style.cssText = "position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:1000; padding:20px;";
+      overlay.innerHTML = `
+        <div style="background:#1e293b; border-radius:12px; padding:24px; max-width:480px; width:100%;">
+          <h3 style="margin:0 0 16px;">💳 Order Details</h3>
+          <table style="width:100%; font-size:13px;">${rows}</table>
+          <div style="text-align:right; margin-top:16px;">
+            <button class="btn" id="closeOrderModal">Close</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      overlay.querySelector("#closeOrderModal").addEventListener("click", () => overlay.remove());
+      overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.remove(); });
+    } catch (err) {
+      alert("Error fetching order: " + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
   }
 
   async function handleAction(action, transactionId, btn) {
