@@ -62,6 +62,17 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
   .steps { text-align: left; font-size: 13px; opacity: 0.75; margin-top: 20px; line-height: 1.8; }
+  .save-warning {
+    text-align: left;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: #fbbf24;
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 14px;
+  }
 </style>
 </head>
 <body>
@@ -74,6 +85,10 @@
     <div id="result" style="display:none;">
       <div class="key-box" id="licenseKey"></div>
       <button class="copy-btn" id="copyBtn">Copy Key</button>
+      <div class="save-warning">
+        ⚠️ <strong>Save this key somewhere safe</strong> — like a notes app, password manager, or email to yourself.
+        If you ever reinstall the extension, you'll need to enter this key again to restore your license.
+      </div>
       <div class="steps">
         <strong>Next steps:</strong>
         <ol style="margin: 8px 0 0; padding-left: 20px;">
