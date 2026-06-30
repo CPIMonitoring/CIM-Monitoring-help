@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>CIM – SAP CPI & Integration Suite Monitor</title>
-<meta name="description" content="Chrome and Edge extension for SAP Integration Suite (SAP CPI) monitoring. Cloud and Edge messages, artifacts, JMS queues, certificates, dependency signals, and tenant comparison — all from one panel on your SAP page." />
+<title>CIM – SAP Integration Suite Monitor</title>
+<meta name="description" content="Chrome and Edge extension for SAP Integration Suite monitoring. Cloud and Edge messages, artifacts, JMS queues, certificates, dependency signals, and tenant comparison — all from one panel on your SAP page." />
 <link rel="icon" href="data:," />
 <style>
   :root{
@@ -193,8 +193,8 @@
 <header class="hero">
   <div class="wrap hero-grid">
     <div>
-      <span class="eyebrow">For SAP Integration Suite · SAP CPI</span>
-      <h1>Your SAP CPI tenant,<br/>watched from <span class="accent">one button.</span></h1>
+      <span class="eyebrow">For SAP Integration Suite</span>
+      <h1>Your SAP Integration Suite tenant,<br/>watched from <span class="accent">one button.</span></h1>
       <p class="lead">CIM is a Chrome and Edge extension that sits on your SAP Integration Suite page and gives you Cloud and Edge monitoring, artifacts, JMS queues, certificates, and tenant comparison — without opening a second tool.</p>
       <div class="hero-ctas">
         <a class="btn btn-primary" href="#install">Add to Chrome / Edge — free trial</a>
@@ -203,7 +203,7 @@
       <div class="trial-note">$ trial --days 30 &nbsp;→&nbsp; <b>full access, no card required</b></div>
     </div>
     <div class="button-stage">
-      <div class="stage-label">// live on every SAP CPI page</div>
+      <div class="stage-label">// live on every SAP Integration Suite page</div>
       <div class="stage-window">
         <div class="stage-rows">
           <div class="stage-row w1"></div>
@@ -223,7 +223,7 @@
     <div style="position:relative; width:100%; padding-top:56.25%; border-radius:14px; overflow:hidden; border:1px solid var(--line); box-shadow:0 20px 50px -28px rgba(0,0,0,0.6);">
       <iframe
         src="https://www.youtube-nocookie.com/embed/cUIoPUV4BoE"
-        title="CIM — SAP CPI & Integration Suite Monitor demo"
+        title="CIM — SAP Integration Suite Monitor demo"
         style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen
@@ -237,7 +237,7 @@
   <div class="wrap">
     <div class="section-head">
       <span class="eyebrow">✨ What SAP doesn't give you</span>
-      <h2>Beyond standard <span class="hl">SAP CPI</span>.</h2>
+      <h2>Beyond standard <span class="hl">SAP Integration Suite</span>.</h2>
       <p>Capabilities CIM adds on top of SAP Cloud Integration — none of these exist in SAP's own native screens.</p>
     </div>
     <div class="beyond-grid">
@@ -359,7 +359,7 @@ const FEATURES = [
     "Last Refresh indicator: green (fresh), amber (1 min), red (2+ mins)."
   ]},
   { group: "Monitoring", icon: "📈", title: "Cloud Monitoring", tag: "Multi-filter message monitoring with snapshot cards and saved views.", points: [
-    "View CPI messages with status snapshots, pagination, and multi-filter support.",
+    "View Integration Suite messages with status snapshots, pagination, and multi-filter support.",
     "Status snapshot cards: Completed, Failed, Escalated, Processing, Retry, Cancelled — clickable to filter messages by that status. All counts update when iFlow filter changes.",
     "Time range filter: Last Hour, Last 24h, 7 Days, 15 Days, 30 Days — profile-aware.",
     "iFlow filter: custom multi-select dropdown — select one or more iFlows using checkboxes. Button shows count e.g. '3 iFlows selected'. Clear All link to reset.",
@@ -390,7 +390,7 @@ const FEATURES = [
     "Trace messages by Correlation ID, Message ID, Application Message ID, or Custom Status.",
     "Detail panel shows: iFlow, Package, Status, Duration, Log Level, Sender, Receiver, Message ID, Correlation ID, Application Message ID, Custom Status.",
     "Show Custom Headers button on the Message Details panel — fetches and displays all custom header Name/Value pairs for the selected message on demand.",
-    "Message ID and Correlation ID are clickable links — opens SAP CPI Monitoring in a new tab, automatically filtered to that identifier.",
+    "Message ID and Correlation ID are clickable links — opens SAP Integration Suite Monitoring in a new tab, automatically filtered to that identifier.",
     "Standard mode: server-side OData exact match by Correlation ID or Message ID.",
     "Advanced mode: client-side filter by Application Message ID, Application Type, or Custom Status.",
     "Custom Status mode: server-side OData filter — fetches all matching records across pages, grouped by iFlow."
@@ -489,7 +489,7 @@ const FEATURES = [
   ]},
 
   { group: "Cross-tenant", icon: "🔁", title: "Match Environments", tag: "Compare Dev, Test and Prod side by side, live.", points: [
-    "Compares runtime artifacts between two CPI environments — version mismatches, missing artifacts, and status differences side by side.",
+    "Compares runtime artifacts between two Integration Suite environments — version mismatches, missing artifacts, and status differences side by side.",
     "Supports three named environments: DEV, TEST, and PROD.",
     "Register an environment: open the tab you're logged into that tenant on, open the extension, go to Match Environments, and click Register Current Tenant as DEV / TEST / PROD.",
     "Open each tenant in its own browser tab (logged into DEV, TEST, PROD simultaneously across tabs), register each one, then run the comparison from any tab.",
@@ -515,15 +515,15 @@ const FEATURES = [
   ]},
 
   { group: "Test automation", icon: "🧪", title: "Test Cases", tag: "Sync, Async and Match Payload Async — one shared login for all.", points: [
-    "Two separate test types: Match Payload Async (max 1) and regular Test Cases (max 25) — both run against your SAP CPI tenant directly from the browser.",
+    "Two separate test types: Match Payload Async (max 1) and regular Test Cases (max 25) — both run against your SAP Integration Suite tenant directly from the browser.",
     "Shared Username and Password: one login saved per tenant — used automatically by every test case. Auto-fills on page open. Password stored using AES-GCM encryption, never in plain text.",
     "Match Payload Async: a single GET endpoint is called once and its raw HTTP response is compared directly against the Expected Payload box — no MPL or iFlow processing status is checked, only the response body.",
     "If using the bundled utility iFlow, this test depends on a value already being written to Data Store PAYLOAD, Entry ID match, before you run it — typically by your own business iFlow producing that result first. The utility iFlow only reads (and deletes) the entry; it doesn't generate one itself.",
-    "Don't have an endpoint? Click Download Utility iFlow for a ready-made SAP CPI iFlow package — import, deploy, point the test at it.",
+    "Don't have an endpoint? Click Download Utility iFlow for a ready-made SAP Integration Suite iFlow package — import, deploy, point the test at it.",
     "Regular Test Cases — Sync interface: full comparison — HTTP status, iFlow processing (MPL) status, and the response payload against Expected Payload.",
     "Regular Test Cases — Async interface: checks only HTTP status and MPL status — the Expected Payload box is hidden and skipped, switching instantly when you change the dropdown.",
     "Run Selected: tick any combination and run them in one click — each row shows a live ⏳ Running… status, then updates in place to ✅/❌.",
-    "Result panel shows: HTTP status vs expected, iFlow processing status, payload match result, and every related iFlow triggered for that message with its own status — Correlation ID and Message ID are clickable links into SAP CPI Monitoring.",
+    "Result panel shows: HTTP status vs expected, iFlow processing status, payload match result, and every related iFlow triggered for that message with its own status — Correlation ID and Message ID are clickable links into SAP Integration Suite Monitoring.",
     "Failed payload comparisons show exactly what's wrong, not just pass/fail — missing fields, extra fields, and fields with a different value than expected, broken down field by field for JSON and line by line for XML/text.",
     "Copy Selected, Download Selected (Excel), and Delete Selected — bulk actions for ticked test cases.",
     "Test cases stored per tenant in chrome.storage.local — each tenant has its own independent set. Survives browser cache clear."
