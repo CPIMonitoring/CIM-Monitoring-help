@@ -177,6 +177,53 @@
 </head>
 <body>
 
+<section style="background:var(--bg); padding:36px 0 0;">
+  <div class="wrap" style="max-width:900px;">
+    <div style="position:relative; width:100%; padding-top:56.25%; border-radius:14px; overflow:hidden; border:1px solid var(--line); box-shadow:0 20px 50px -28px rgba(0,0,0,0.6);">
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/cUIoPUV4BoE"
+        title="CIM — SAP CPI & Integration Suite Monitor demo"
+        style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+    </div>
+  </div>
+</section>
+
+<section id="beyond-standard">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">✨ What SAP doesn't give you</span>
+      <h2>Beyond standard <span class="hl">SAP CPI</span>.</h2>
+      <p>Capabilities CIM adds on top of SAP Cloud Integration — none of these exist in SAP's own native screens.</p>
+    </div>
+    <div class="beyond-grid">
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#5fb4ff;"></span>Multi-select iFlow filtering with live status counts, clickable sender/receiver, and server-side Custom Status search — across both Cloud and Edge Monitoring.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#34d399;"></span>Bulk undeploy, bulk restart, and bulk trace activation — act on multiple selected artifacts in one go instead of one at a time.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f5b945;"></span>Saved filter views in monitoring — save a combination of range, status, iFlow, sender and receiver as a named view and restore it instantly.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#a78bfa;"></span>Custom coloured tags on iFlows — label and group artifacts your own way, independent of SAP packages.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#22d3ee;"></span>Per-queue JMS thresholds — set individual warning and critical alert levels for each queue, not just one tenant-wide setting.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f0625f;"></span>Consolidated Alerts — failed messages, certificate expiry, queue thresholds and error artifacts in one place, with one click back to where you were.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#5fb4ff;"></span>Draggable health-status button on the SAP page itself — changes colour live based on recent message health, no need to open the panel.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#34d399;"></span>Queue size and overdue-message counts shown together in one table, instead of checking each queue individually.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f5b945;"></span>Certificate expiry shown as days remaining, colour-coded by urgency.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#a78bfa;"></span>Idle iFlow detection across 1 hour, 24 hours, 7 days, or 30 days — scan depth adapts automatically to your tenant's traffic volume.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#22d3ee;"></span>All packages and their artifacts in one browsable, searchable page — instead of opening each package individually.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f0625f;"></span>Undeploy history — a running record of what was undeployed and when, kept automatically.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#5fb4ff;"></span>Message Journey — trace a single message end-to-end by Correlation ID, Message ID, or Custom Status from one screen.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#34d399;"></span>Built-in test cases with full payload comparison for both Sync and Async interfaces, showing exactly what passed, failed, or differed.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f5b945;"></span>One Dashboard combining message health, certificates, queues, artifacts and locks — a single screen instead of checking each area separately.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#a78bfa;"></span>Live deployment status marker shown directly next to each artifact's name on SAP's own design page — no need to switch screens.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#22d3ee;"></span>A Packages button added straight into SAP's design page header — browse every package and artifact with deployment status without leaving the page.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f0625f;"></span>A dedicated Packages page inside CIM itself — search, filter by type/status/package, export, and save views, without opening SAP's design page.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#5fb4ff;"></span>Failed payload comparisons show exactly what's missing, extra, or different field by field — not just a pass/fail result.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#34d399;"></span>Custom Header search and filtering — view all custom headers for a message in Message Journey, and filter monitoring by header Name/Value combined with Sender, Receiver, Custom Status and iFlow.</div>
+    </div>
+  </div>
+</section>
+
 <nav class="nav">
   <div class="wrap">
     <div class="nav-brand"><div class="nav-logo mono">CIM</div><span>CIM</span></div>
@@ -261,38 +308,6 @@
         </div>
       </div>
       <div class="demo-footer">Sync runs the full check. Switch to Async and the Expected Payload box disappears instantly — only HTTP and MPL status matter. Switch to Match Payload Async and it's a single GET, compared straight against the response body — no MPL involved. If a payload doesn't match, CIM shows exactly what's missing, extra, or different — not just pass/fail. No endpoint handy? A ready-made utility iFlow ships with the page for exactly this — download it, deploy it, point the test at it. Note: the utility iFlow only reads Data Store PAYLOAD, Entry ID match — your own process needs to write the result there first.</div>
-    </div>
-  </div>
-</section>
-
-<section id="beyond-standard">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow">✨ What SAP doesn't give you</span>
-      <h2>Beyond standard <span class="hl">SAP CPI</span>.</h2>
-      <p>Capabilities CIM adds on top of SAP Cloud Integration — none of these exist in SAP's own native screens.</p>
-    </div>
-    <div class="beyond-grid">
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#5fb4ff;"></span>Multi-select iFlow filtering with live status counts, clickable sender/receiver, and server-side Custom Status search — across both Cloud and Edge Monitoring.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#34d399;"></span>Bulk undeploy, bulk restart, and bulk trace activation — act on multiple selected artifacts in one go instead of one at a time.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f5b945;"></span>Saved filter views in monitoring — save a combination of range, status, iFlow, sender and receiver as a named view and restore it instantly.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#a78bfa;"></span>Custom coloured tags on iFlows — label and group artifacts your own way, independent of SAP packages.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#22d3ee;"></span>Per-queue JMS thresholds — set individual warning and critical alert levels for each queue, not just one tenant-wide setting.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f0625f;"></span>Consolidated Alerts — failed messages, certificate expiry, queue thresholds and error artifacts in one place, with one click back to where you were.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#5fb4ff;"></span>Draggable health-status button on the SAP page itself — changes colour live based on recent message health, no need to open the panel.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#34d399;"></span>Queue size and overdue-message counts shown together in one table, instead of checking each queue individually.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f5b945;"></span>Certificate expiry shown as days remaining, colour-coded by urgency.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#a78bfa;"></span>Idle iFlow detection across 1 hour, 24 hours, 7 days, or 30 days — scan depth adapts automatically to your tenant's traffic volume.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#22d3ee;"></span>All packages and their artifacts in one browsable, searchable page — instead of opening each package individually.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f0625f;"></span>Undeploy history — a running record of what was undeployed and when, kept automatically.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#5fb4ff;"></span>Message Journey — trace a single message end-to-end by Correlation ID, Message ID, or Custom Status from one screen.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#34d399;"></span>Built-in test cases with full payload comparison for both Sync and Async interfaces, showing exactly what passed, failed, or differed.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f5b945;"></span>One Dashboard combining message health, certificates, queues, artifacts and locks — a single screen instead of checking each area separately.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#a78bfa;"></span>Live deployment status marker shown directly next to each artifact's name on SAP's own design page — no need to switch screens.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#22d3ee;"></span>A Packages button added straight into SAP's design page header — browse every package and artifact with deployment status without leaving the page.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f0625f;"></span>A dedicated Packages page inside CIM itself — search, filter by type/status/package, export, and save views, without opening SAP's design page.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#5fb4ff;"></span>Failed payload comparisons show exactly what's missing, extra, or different field by field — not just a pass/fail result.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#34d399;"></span>Custom Header search and filtering — view all custom headers for a message in Message Journey, and filter monitoring by header Name/Value combined with Sender, Receiver, Custom Status and iFlow.</div>
     </div>
   </div>
 </section>
