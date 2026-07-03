@@ -98,6 +98,8 @@
   .btn.green:hover:not(:disabled) { filter: brightness(1.08); }
   .btn.red { background: var(--danger); border-color: var(--danger); color: #2a0e0e; }
   .btn.red:hover:not(:disabled) { filter: brightness(1.08); }
+  .btn.blue { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.blue:hover:not(:disabled) { background: var(--accent-dim); }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
   .error { color: var(--danger); font-size: 13px; margin-top: 10px; min-height: 16px; }
 
@@ -230,7 +232,7 @@
   .badge.approved { background: var(--success-bg); color: var(--success); }
   .badge.rejected { background: var(--danger-bg); color: var(--danger); }
   .actions { display: flex; gap: 6px; flex-wrap: wrap; }
-  .actions .btn { padding: 6px 12px; font-size: 11px; }
+  .actions .btn { padding: 6px 14px; font-size: 11px; min-width: 84px; text-align: center; justify-content: center; }
   .empty { text-align: center; padding: 56px 20px; color: var(--text-faint); font-size: 13px; }
 
   /* ── Modals (used by inline JS-built overlays) ───────────────── */
@@ -479,15 +481,16 @@
       }
 
       if (l.orderid) {
-        actions += ` <button class="btn" data-view-order="${escapeHtml(l.orderid)}">View Order</button>`;
+        actions += `<button class="btn blue" data-view-order="${escapeHtml(l.orderid)}">View Order</button>`;
       }
+      actions = `<div class="actions">${actions}</div>`;
 
       const deviceCount = l.recentDeviceCount ?? 0;
       const deviceColor = deviceCount >= 5 ? "var(--danger)" : deviceCount >= 3 ? "var(--warning)" : "var(--success)";
       const deviceCell = `
         <div class="mono" style="color:${deviceColor}; font-weight:600;">${deviceCount}/5</div>
         ${(l.deviceHistory && l.deviceHistory.length)
-          ? `<button class="btn" style="padding:3px 8px; font-size:10px; margin-top:4px;" data-view-devices="${escapeHtml(l.licenseKey)}">View</button>`
+          ? `<button class="btn blue" style="padding:3px 8px; font-size:10px; min-width:0; margin-top:4px;" data-view-devices="${escapeHtml(l.licenseKey)}">View</button>`
           : `<span class="small-muted">none yet</span>`}
       `;
 
