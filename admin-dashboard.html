@@ -329,12 +329,22 @@
         actions += ` <button class="btn" data-view-order="${escapeHtml(l.orderid)}">View Order</button>`;
       }
 
+      const deviceCount = l.recentDeviceCount ?? 0;
+      const deviceColor = deviceCount >= 5 ? "#f87171" : deviceCount >= 3 ? "#fbbf24" : "#4ade80";
+      const deviceCell = `
+        <div style="color:${deviceColor}; font-weight:600;">${deviceCount}/5</div>
+        ${(l.deviceHistory && l.deviceHistory.length)
+          ? `<button class="btn" style="padding:3px 8px; font-size:10px; margin-top:4px;" data-view-devices="${escapeHtml(l.licenseKey)}">View</button>`
+          : `<span class="small-muted">none yet</span>`}
+      `;
+
       return `
         <tr>
           <td class="mono">${escapeHtml(l.licenseKey)}${sourceTag}${linked}</td>
           <td>${escapeHtml(l.email)}</td>
           <td>${badge}</td>
           <td class="small-muted">${date}</td>
+          <td>${deviceCell}</td>
           <td>${actions}</td>
         </tr>`;
     }).join("");
@@ -342,7 +352,7 @@
     container.innerHTML = `
       <table>
         <thead>
-          <tr><th>License Key</th><th>Email</th><th>Status</th><th>Created</th><th>Actions</th></tr>
+          <tr><th>License Key</th><th>Email</th><th>Status</th><th>Created</th><th>Devices</th><th>Actions</th></tr>
         </thead>
         <tbody>${rows}</tbody>
       </table>`;
@@ -354,6 +364,47 @@
     container.querySelectorAll("[data-view-order]").forEach(btn => {
       btn.addEventListener("click", () => showOrderDetails(btn.dataset.viewOrder, btn));
     });
+
+    container.querySelectorAll("[data-view-devices]").forEach(btn => {
+      btn.addEventListener("click", () => showDeviceHistory(btn.dataset.viewDevices));
+    });
+  }
+
+  function showDeviceHistory(licenseKey) {
+    const license = allLicenses.find(l => l.licenseKey === licenseKey);
+    if (!license) return;
+
+    const history = (license.deviceHistory || [])
+      .slice()
+      .sort((a, b) => new Date(b.activatedAt) - new Date(a.activatedAt));
+
+    const rows = history.map(h => {
+      const isCurrent = h.deviceId === license.deviceId;
+      return `
+        <tr>
+          <td class="mono" style="font-size:11px;">${escapeHtml(h.deviceId)}${isCurrent ? ' <span class="badge approved" style="margin-left:4px;">current</span>' : ""}</td>
+          <td class="small-muted">${new Date(h.activatedAt).toLocaleString()}</td>
+        </tr>`;
+    }).join("");
+
+    const overlay = document.createElement("div");
+    overlay.style.cssText = "position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:1000; padding:20px;";
+    overlay.innerHTML = `
+      <div style="background:#1e293b; border-radius:12px; padding:24px; max-width:520px; width:100%; max-height:80vh; overflow-y:auto;">
+        <h3 style="margin:0 0 4px;">📱 Device Activation History</h3>
+        <p class="small-muted" style="margin:0 0 16px;">${escapeHtml(licenseKey)} — ${history.length} device${history.length !== 1 ? "s" : ""} in the past year</p>
+        <table style="width:100%; font-size:12px;">
+          <thead><tr><th style="padding:6px 8px;">Device ID</th><th style="padding:6px 8px;">Activated</th></tr></thead>
+          <tbody>${rows || '<tr><td colspan="2" class="small-muted" style="padding:12px;">No activation history yet.</td></tr>'}</tbody>
+        </table>
+        <div style="text-align:right; margin-top:16px;">
+          <button class="btn" id="closeDeviceModal">Close</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.querySelector("#closeDeviceModal").addEventListener("click", () => overlay.remove());
+    overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.remove(); });
   }
 
   async function showOrderDetails(orderId, btn) {
