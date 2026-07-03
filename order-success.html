@@ -1,1 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thank You — CIM License Key</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+  .card {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 32px;
+    max-width: 460px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  }
+  h1 { font-size: 22px; margin: 0 0 8px; }
+  p { opacity: 0.75; line-height: 1.6; font-size: 14px; }
+  .key-box {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 20px 0;
+    font-family: monospace;
+    font-size: 20px;
+    letter-spacing: 1px;
+    word-break: break-all;
+    color: #22c55e;
+  }
+  .copy-btn {
+    background: #0a6ed1;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .copy-btn:active { opacity: 0.8; }
+  .status { font-size: 13px; margin-top: 16px; opacity: 0.7; }
+  .error { color: #ef4444; }
+  .spinner {
+    width: 28px; height: 28px;
+    border: 3px solid #334155;
+    border-top-color: #0a6ed1;
+    border-radius: 50%;
+    margin: 20px auto;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .steps { text-align: left; font-size: 13px; opacity: 0.75; margin-top: 20px; line-height: 1.8; }
+  .save-warning {
+    text-align: left;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: #fbbf24;
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 14px;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>🎉 Thank you for your purchase!</h1>
+    <p id="subtitle">Retrieving your license key...</p>
 
+    <div id="loading" class="spinner"></div>
+
+    <div id="result" style="display:none;">
+      <div class="key-box" id="licenseKey"></div>
+      <button class="copy-btn" id="copyBtn">Copy Key</button>
+      <div class="save-warning">
+        ⚠️ <strong>Save this key somewhere safe</strong> — like a notes app, password manager, or email to yourself.
+        If you ever reinstall the extension, you'll need to enter this key again to restore your license.
+      </div>
+      <div class="steps">
+        <strong>Next steps:</strong>
+        <ol style="margin: 8px 0 0; padding-left: 20px;">
+          <li>Open the CIM extension panel on your SAP CPI tenant</li>
+          <li>Go to <b>About → License Status</b></li>
+          <li>Enter your email and this license key, then click Activate</li>
+        </ol>
+      </div>
+    </div>
+
+    <div id="errorBox" style="display:none;">
+      <p class="error" id="errorMsg"></p>
+      <button class="copy-btn" id="retryBtn">Try Again</button>
+    </div>
+
+    <div class="status" id="orderIdDisplay"></div>
+  </div>
+
+<script>
+  // ── Configuration ──
+  const API_BASE = "https://cim-monitoring-license-api.integrationmonitorcim.workers.dev";
+  const MAX_RETRIES = 6;
+  const RETRY_DELAY_MS = 2000; // webhook may lag slightly behind the redirect
+
+  const params = new URLSearchParams(window.location.search);
+  const orderId = params.get("order_id") || params.get("order_number") || "";
+
+  const loadingEl = document.getElementById("loading");
+  const resultEl = document.getElementById("result");
+  const errorBox = document.getElementById("errorBox");
+  const errorMsg = document.getElementById("errorMsg");
+  const subtitleEl = document.getElementById("subtitle");
+  const orderIdDisplay = document.getElementById("orderIdDisplay");
+
+  if (orderId) {
+    orderIdDisplay.textContent = "Order #" + orderId;
+  }
+
+  async function lookupKey(attempt = 1) {
+    if (!orderId) {
+      showError("No order reference found in the URL. If you just completed a purchase, check your email receipt, or contact support with your order number.");
+      return;
+    }
+
+    try {
+      const res = await fetch(API_BASE + "/lookup-by-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId })
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        showKey(data.licenseKey, data.maskedEmail);
+        return;
+      }
+
+      // Order not found yet — webhook may still be processing. Retry a few times.
+      if (res.status === 404 && attempt < MAX_RETRIES) {
+        subtitleEl.textContent = "Almost there — finalizing your order...";
+        setTimeout(() => lookupKey(attempt + 1), RETRY_DELAY_MS);
+        return;
+      }
+
+      showError(data.message || "Could not find your order. Please contact support with your order number.");
+    } catch (err) {
+      if (attempt < MAX_RETRIES) {
+        setTimeout(() => lookupKey(attempt + 1), RETRY_DELAY_MS);
+        return;
+      }
+      showError("Could not reach the license server. Please refresh this page or contact support.");
+    }
+  }
+
+  function showKey(key, maskedEmail) {
+    loadingEl.style.display = "none";
+    errorBox.style.display = "none";
+    resultEl.style.display = "block";
+    subtitleEl.textContent = maskedEmail
+      ? "Your license key (for " + maskedEmail + "):"
+      : "Your license key:";
+    document.getElementById("licenseKey").textContent = key;
+  }
+
+  function showError(message) {
+    loadingEl.style.display = "none";
+    resultEl.style.display = "none";
+    errorBox.style.display = "block";
+    subtitleEl.textContent = "We hit a snag retrieving your key.";
+    errorMsg.textContent = message;
+  }
+
+  document.getElementById("copyBtn")?.addEventListener("click", () => {
+    const key = document.getElementById("licenseKey").textContent;
+    navigator.clipboard.writeText(key).then(() => {
+      const btn = document.getElementById("copyBtn");
+      const original = btn.textContent;
+      btn.textContent = "Copied!";
+      setTimeout(() => { btn.textContent = original; }, 1500);
+    });
+  });
+
+  document.getElementById("retryBtn")?.addEventListener("click", () => {
+    errorBox.style.display = "none";
+    loadingEl.style.display = "block";
+    subtitleEl.textContent = "Retrieving your license key...";
+    lookupKey(1);
+  });
+
+  lookupKey();
+</script>
+</body>
+</html>
