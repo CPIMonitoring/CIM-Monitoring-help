@@ -3,151 +3,301 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>CIM Admin — UPI Requests</title>
+<title>CIM Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
-    margin: 0;
-    padding: 24px;
-    min-height: 100vh;
+  :root {
+    --bg: #0a0e17;
+    --surface: #121826;
+    --surface-2: #1a2233;
+    --surface-3: #212b40;
+    --border: #232c40;
+    --text: #e8ecf4;
+    --text-muted: #8993a8;
+    --text-faint: #5c6579;
+    --accent: #3b82f6;
+    --accent-dim: #1d4ed8;
+    --success: #34d399;
+    --success-bg: #0f2a20;
+    --warning: #fbbf24;
+    --warning-bg: #2a2208;
+    --danger: #f87171;
+    --danger-bg: #2a1414;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --font: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
   }
-  .wrap { max-width: 900px; margin: 0 auto; }
-  h1 { font-size: 20px; margin: 0 0 20px; }
 
-  /* Login screen */
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ── Login screen ─────────────────────────────────────────────── */
   .login-box {
-    max-width: 360px;
-    margin: 80px auto;
-    background: #1e293b;
-    border-radius: 12px;
-    padding: 28px;
+    max-width: 380px;
+    margin: 12vh auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
     text-align: center;
   }
+  .login-box .mark {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 20px;
+  }
+  .login-box h2 { margin: 0 0 6px; font-size: 17px; font-weight: 600; }
+  .login-box p { font-size: 13px; color: var(--text-muted); margin: 0; line-height: 1.5; }
   .login-box input {
     width: 100%;
-    padding: 10px 12px;
-    margin: 14px 0;
-    border-radius: 6px;
-    border: 1px solid #334155;
-    background: #0f172a;
-    color: #e2e8f0;
+    padding: 11px 14px;
+    margin: 18px 0 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
     font-size: 14px;
+    font-family: var(--font);
   }
+  .login-box input:focus { border-color: var(--accent); }
+  .login-box .btn { width: 100%; }
+
+  /* ── Buttons ──────────────────────────────────────────────────── */
   .btn {
-    background: #0a6ed1;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 10px 20px;
+    background: var(--surface-3);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 16px;
     font-size: 13px;
     font-weight: 600;
+    font-family: var(--font);
     cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
   }
-  .btn.green { background: #16a34a; }
-  .btn.red { background: #dc2626; }
+  .btn:hover:not(:disabled) { background: #28324a; border-color: #303c58; }
+  #loginBtn, .login-box .btn { background: var(--accent); border-color: var(--accent); }
+  #loginBtn:hover:not(:disabled) { background: var(--accent-dim); }
+  .btn.green { background: var(--success); border-color: var(--success); color: #06251a; }
+  .btn.green:hover:not(:disabled) { filter: brightness(1.08); }
+  .btn.red { background: var(--danger); border-color: var(--danger); color: #2a0e0e; }
+  .btn.red:hover:not(:disabled) { filter: brightness(1.08); }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .error { color: #ef4444; font-size: 13px; margin-top: 8px; }
+  .error { color: var(--danger); font-size: 13px; margin-top: 10px; min-height: 16px; }
 
-  /* Dashboard */
-  .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-  .filter-tabs { display: flex; gap: 6px; }
-  .filter-tab {
-    padding: 6px 14px;
-    border-radius: 6px;
-    font-size: 12px;
-    cursor: pointer;
-    background: #1e293b;
-    border: 1px solid #334155;
-    color: #94a3b8;
+  /* ── App shell: sidebar + main ───────────────────────────────── */
+  .app-shell { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 12px;
   }
-  .filter-tab.active { background: #0a6ed1; border-color: #0a6ed1; color: white; }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 10px 22px;
+    font-weight: 700; font-size: 15px;
+  }
+  .brand .mark {
+    width: 26px; height: 26px; border-radius: 7px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; flex-shrink: 0;
+  }
 
-  .page-tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid #334155; }
+  .side-nav { display: flex; flex-direction: column; gap: 2px; }
   .page-tab {
-    padding: 10px 18px;
+    padding: 10px 12px;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    color: #94a3b8;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
+    color: var(--text-muted);
+    border-radius: var(--radius-sm);
+    border-left: 2px solid transparent;
+    transition: background 0.15s, color 0.15s;
   }
-  .page-tab.active { color: #38bdf8; border-bottom-color: #38bdf8; }
+  .page-tab:hover { background: var(--surface-2); color: var(--text); }
+  .page-tab.active { background: var(--surface-2); color: var(--text); border-left-color: var(--accent); }
 
-  .search-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .main { flex: 1; padding: 28px 32px; min-width: 0; }
+
+  .main-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 22px;
+  }
+  .main-header h1 { font-size: 19px; margin: 0; font-weight: 700; }
+  .refresh-row { display: flex; align-items: center; gap: 12px; }
+  .small-muted { font-size: 11.5px; color: var(--text-faint); }
+
+  /* ── Filters / search ─────────────────────────────────────────── */
+  .filter-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-tab {
+    padding: 6px 13px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .filter-tab:hover { color: var(--text); }
+  .filter-tab.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+  .search-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
   .search-input {
     flex: 1;
-    min-width: 220px;
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: 1px solid #334155;
-    background: #1e293b;
-    color: #e2e8f0;
+    min-width: 240px;
+    padding: 9px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
     font-size: 13px;
+    font-family: var(--font);
   }
-  .summary-row { display: flex; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
-  .summary-card {
-    background: #1e293b;
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-size: 12px;
-  }
-  .summary-card .num { font-size: 18px; font-weight: 700; display: block; }
+  .search-input:focus { border-color: var(--accent); }
 
+  /* ── Summary cards ────────────────────────────────────────────── */
+  .summary-row { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    font-size: 12px;
+    color: var(--text-muted);
+    min-width: 110px;
+  }
+  .summary-card .num { font-family: var(--mono); font-size: 21px; font-weight: 600; display: block; color: var(--text); margin-bottom: 2px; }
+
+  /* ── Table ────────────────────────────────────────────────────── */
+  .table-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th { text-align: left; padding: 10px 12px; background: #1e293b; color: #94a3b8; font-weight: 600; border-bottom: 1px solid #334155; }
-  td { padding: 10px 12px; border-bottom: 1px solid #1e293b; vertical-align: top; }
-  tr:hover td { background: #1e293b40; }
-  .mono { font-family: monospace; font-size: 12px; }
-  .badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; }
-  .badge.pending { background: #78350f; color: #fbbf24; }
-  .badge.approved { background: #14532d; color: #4ade80; }
-  .badge.rejected { background: #450a0a; color: #f87171; }
-  .actions { display: flex; gap: 6px; }
-  .actions .btn { padding: 5px 12px; font-size: 11px; }
-  .empty { text-align: center; padding: 40px; opacity: 0.6; }
-  .refresh-row { display: flex; align-items: center; gap: 10px; }
-  .small-muted { font-size: 11px; opacity: 0.5; }
+  th {
+    text-align: left; padding: 12px 16px;
+    background: var(--surface-2);
+    color: var(--text-faint);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--border);
+  }
+  td { padding: 12px 16px; border-bottom: 1px solid var(--surface-2); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr { border-left: 3px solid transparent; transition: background 0.12s; }
+  tbody tr:hover { background: var(--surface-2); }
+  tbody tr.s-active { border-left-color: var(--success); }
+  tbody tr.s-pending { border-left-color: var(--warning); }
+  tbody tr.s-rejected { border-left-color: var(--danger); }
+
+  .mono { font-family: var(--mono); font-size: 12px; }
+  .badge { padding: 3px 10px; border-radius: 999px; font-size: 10.5px; font-weight: 600; display: inline-block; letter-spacing: 0.02em; }
+  .badge.pending { background: var(--warning-bg); color: var(--warning); }
+  .badge.approved { background: var(--success-bg); color: var(--success); }
+  .badge.rejected { background: var(--danger-bg); color: var(--danger); }
+  .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .actions .btn { padding: 6px 12px; font-size: 11px; }
+  .empty { text-align: center; padding: 56px 20px; color: var(--text-faint); font-size: 13px; }
+
+  /* ── Modals (used by inline JS-built overlays) ───────────────── */
+  .modal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+  .modal-card table { font-size: 12px; }
+  .modal-card th { background: transparent; padding: 6px 8px; }
+  .modal-card td { padding: 8px; border-bottom: 1px solid var(--surface-2); }
+
+  @media (max-width: 720px) {
+    .app-shell { flex-direction: column; }
+    .sidebar { width: 100%; flex-direction: row; align-items: center; padding: 12px 16px; }
+    .brand { padding: 0; margin-right: auto; }
+    .side-nav { flex-direction: row; }
+    .sidebar-footer { display: none; }
+    .main { padding: 20px; }
+  }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <div id="loginScreen" class="login-box">
-      <h2 style="margin:0 0 8px;">🔒 CIM Admin</h2>
-      <p style="font-size:13px; opacity:0.7; margin:0;">Enter the admin password to review UPI requests.</p>
-      <input type="password" id="passwordInput" placeholder="Admin password" />
-      <button class="btn" id="loginBtn" style="width:100%;">Log In</button>
-      <div class="error" id="loginError"></div>
-    </div>
+  <div id="loginScreen" class="login-box">
+    <div class="mark">🔒</div>
+    <h2>CIM Admin</h2>
+    <p>Enter the admin password to review licenses and payment requests.</p>
+    <input type="password" id="passwordInput" placeholder="Admin password" />
+    <button class="btn" id="loginBtn">Log In</button>
+    <div class="error" id="loginError"></div>
+  </div>
 
-    <div id="dashboard" style="display:none;">
-      <div class="toolbar">
+  <div id="dashboard" class="app-shell" style="display:none;">
+    <aside class="sidebar">
+      <div class="brand"><span class="mark">🔑</span> CIM Admin</div>
+      <nav class="side-nav" id="pageTabs">
+        <div class="page-tab active" data-page="upi">💳 UPI Requests</div>
+        <div class="page-tab" data-page="licenses">🔐 Licenses</div>
+      </nav>
+      <div class="sidebar-footer">
+        <span class="small-muted" id="lastRefreshed"></span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="main-header">
         <h1 id="pageTitle">💳 UPI Payment Requests</h1>
         <div class="refresh-row">
-          <span class="small-muted" id="lastRefreshed"></span>
           <button class="btn" id="refreshBtn">Refresh</button>
         </div>
       </div>
 
-      <div class="page-tabs" id="pageTabs">
-        <div class="page-tab active" data-page="upi">UPI Requests</div>
-        <div class="page-tab" data-page="licenses">Licenses</div>
-      </div>
-
       <div id="upiPage">
-        <div class="filter-tabs" id="filterTabs">
-          <div class="filter-tab active" data-filter="pending">Pending</div>
-          <div class="filter-tab" data-filter="approved">Approved</div>
-          <div class="filter-tab" data-filter="rejected">Rejected</div>
-          <div class="filter-tab" data-filter="all">All</div>
+        <div class="search-row">
+          <div class="filter-tabs" id="filterTabs">
+            <div class="filter-tab active" data-filter="pending">Pending</div>
+            <div class="filter-tab" data-filter="approved">Approved</div>
+            <div class="filter-tab" data-filter="rejected">Rejected</div>
+            <div class="filter-tab" data-filter="all">All</div>
+          </div>
         </div>
-        <div id="tableContainer"></div>
+        <div id="tableContainer" class="table-card"></div>
       </div>
 
       <div id="licensesPage" style="display:none;">
+        <div class="summary-row" id="licensesSummary"></div>
         <div class="search-row">
           <input id="licenseSearchInput" class="search-input" placeholder="Search by email or license key..." />
           <div class="filter-tabs" id="licenseFilterTabs">
@@ -157,10 +307,9 @@
             <div class="filter-tab" data-filter="revoked">Revoked</div>
           </div>
         </div>
-        <div id="licensesSummary" class="summary-row"></div>
-        <div id="licensesTableContainer"></div>
+        <div id="licensesTableContainer" class="table-card"></div>
       </div>
-    </div>
+    </main>
   </div>
 
 <script>
@@ -203,7 +352,7 @@
     try {
       await loadRequests();
       loginScreen.style.display = "none";
-      dashboard.style.display = "block";
+      dashboard.style.display = "flex";
       // Remember for this browser session only — cleared on tab close.
       sessionStorage.setItem("cim_admin_pw", pw);
     } catch (err) {
@@ -239,10 +388,12 @@
       return;
     }
 
+    const rowClass = { pending: "s-pending", approved: "s-active", rejected: "s-rejected" };
+
     const rows = filtered.map(r => {
       const date = r.submittedAt ? new Date(r.submittedAt).toLocaleString() : "—";
       const badge = `<span class="badge ${r.status}">${r.status}</span>`;
-      const keyDisplay = r.licenseKey ? `<div class="mono" style="color:#4ade80; margin-top:4px;">${escapeHtml(r.licenseKey)}</div>` : "";
+      const keyDisplay = r.licenseKey ? `<div class="mono" style="color:var(--success); margin-top:4px;">${escapeHtml(r.licenseKey)}</div>` : "";
 
       let actions = "";
       if (r.status === "pending") {
@@ -254,7 +405,7 @@
       }
 
       return `
-        <tr>
+        <tr class="${rowClass[r.status] || ""}">
           <td>${escapeHtml(r.email)}</td>
           <td class="mono">${escapeHtml(r.transactionId)}${keyDisplay}</td>
           <td>${badge}</td>
@@ -296,9 +447,9 @@
 
     document.getElementById("licensesSummary").innerHTML = `
       <div class="summary-card"><span class="num">${total}</span>Total</div>
-      <div class="summary-card"><span class="num" style="color:#4ade80;">${active}</span>Active</div>
-      <div class="summary-card"><span class="num" style="color:#fbbf24;">${created}</span>Unactivated</div>
-      <div class="summary-card"><span class="num" style="color:#f87171;">${revoked}</span>Revoked</div>
+      <div class="summary-card"><span class="num" style="color:var(--success);">${active}</span>Active</div>
+      <div class="summary-card"><span class="num" style="color:var(--warning);">${created}</span>Unactivated</div>
+      <div class="summary-card"><span class="num" style="color:var(--danger);">${revoked}</span>Revoked</div>
     `;
 
     const container = document.getElementById("licensesTableContainer");
@@ -307,6 +458,8 @@
       container.innerHTML = `<div class="empty">No matching licenses.</div>`;
       return;
     }
+
+    const rowClass = { active: "s-active", created: "s-pending", revoked: "s-rejected" };
 
     const rows = filtered.map(l => {
       const badge = `<span class="badge ${l.status === "active" ? "approved" : l.status === "revoked" ? "rejected" : "pending"}">${escapeHtml(l.status)}</span>`;
@@ -330,16 +483,16 @@
       }
 
       const deviceCount = l.recentDeviceCount ?? 0;
-      const deviceColor = deviceCount >= 5 ? "#f87171" : deviceCount >= 3 ? "#fbbf24" : "#4ade80";
+      const deviceColor = deviceCount >= 5 ? "var(--danger)" : deviceCount >= 3 ? "var(--warning)" : "var(--success)";
       const deviceCell = `
-        <div style="color:${deviceColor}; font-weight:600;">${deviceCount}/5</div>
+        <div class="mono" style="color:${deviceColor}; font-weight:600;">${deviceCount}/5</div>
         ${(l.deviceHistory && l.deviceHistory.length)
           ? `<button class="btn" style="padding:3px 8px; font-size:10px; margin-top:4px;" data-view-devices="${escapeHtml(l.licenseKey)}">View</button>`
           : `<span class="small-muted">none yet</span>`}
       `;
 
       return `
-        <tr>
+        <tr class="${rowClass[l.status] || ""}">
           <td class="mono">${escapeHtml(l.licenseKey)}${sourceTag}${linked}</td>
           <td>${escapeHtml(l.email)}</td>
           <td>${badge}</td>
@@ -390,11 +543,11 @@
     const overlay = document.createElement("div");
     overlay.style.cssText = "position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:1000; padding:20px;";
     overlay.innerHTML = `
-      <div style="background:#1e293b; border-radius:12px; padding:24px; max-width:520px; width:100%; max-height:80vh; overflow-y:auto;">
-        <h3 style="margin:0 0 4px;">📱 Device Activation History</h3>
+      <div class="modal-card" style="max-width:520px; width:100%; max-height:80vh; overflow-y:auto;">
+        <h3 style="margin:0 0 4px; font-size:15px;">📱 Device Activation History</h3>
         <p class="small-muted" style="margin:0 0 16px;">${escapeHtml(licenseKey)} — ${history.length} device${history.length !== 1 ? "s" : ""} in the past year</p>
-        <table style="width:100%; font-size:12px;">
-          <thead><tr><th style="padding:6px 8px;">Device ID</th><th style="padding:6px 8px;">Activated</th></tr></thead>
+        <table style="width:100%;">
+          <thead><tr><th>Device ID</th><th>Activated</th></tr></thead>
           <tbody>${rows || '<tr><td colspan="2" class="small-muted" style="padding:12px;">No activation history yet.</td></tr>'}</tbody>
         </table>
         <div style="text-align:right; margin-top:16px;">
@@ -435,9 +588,9 @@
       const overlay = document.createElement("div");
       overlay.style.cssText = "position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:1000; padding:20px;";
       overlay.innerHTML = `
-        <div style="background:#1e293b; border-radius:12px; padding:24px; max-width:480px; width:100%;">
-          <h3 style="margin:0 0 16px;">💳 Order Details</h3>
-          <table style="width:100%; font-size:13px;">${rows}</table>
+        <div class="modal-card" style="max-width:480px; width:100%;">
+          <h3 style="margin:0 0 16px; font-size:15px;">💳 Order Details</h3>
+          <table style="width:100%;">${rows}</table>
           <div style="text-align:right; margin-top:16px;">
             <button class="btn" id="closeOrderModal">Close</button>
           </div>
