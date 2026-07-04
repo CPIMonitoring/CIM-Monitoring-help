@@ -94,7 +94,7 @@
         <ol style="margin: 8px 0 0; padding-left: 20px;">
           <li>Open the CIM extension panel on your SAP CPI tenant</li>
           <li>Go to <b>About → License Status</b></li>
-          <li>Enter your email and this license key, then click Activate</li>
+          <li>Enter this license key, then click Activate</li>
         </ol>
       </div>
     </div>
@@ -143,7 +143,7 @@
       const data = await res.json();
 
       if (res.ok && data.success) {
-        showKey(data.licenseKey, data.maskedEmail);
+        showKey(data.licenseKey);
         return;
       }
 
@@ -164,13 +164,11 @@
     }
   }
 
-  function showKey(key, maskedEmail) {
+  function showKey(key) {
     loadingEl.style.display = "none";
     errorBox.style.display = "none";
     resultEl.style.display = "block";
-    subtitleEl.textContent = maskedEmail
-      ? "Your license key (for " + maskedEmail + "):"
-      : "Your license key:";
+    subtitleEl.textContent = "Your license key:";
     document.getElementById("licenseKey").textContent = key;
   }
 
