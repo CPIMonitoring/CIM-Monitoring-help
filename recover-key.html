@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Recover License Key — CIM</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+  .card {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 32px;
+    max-width: 460px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  }
+  h1 { font-size: 22px; margin: 0 0 8px; }
+  p { opacity: 0.75; line-height: 1.6; font-size: 14px; }
+  .hint {
+    text-align: left;
+    font-size: 12.5px;
+    line-height: 1.6;
+    opacity: 0.7;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 16px 0 20px;
+  }
+  .field { text-align: left; margin-bottom: 16px; }
+  label { display: block; font-size: 12px; opacity: 0.7; margin-bottom: 6px; }
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 12px 14px;
+    color: #e2e8f0;
+    font-size: 14px;
+    font-family: monospace;
+  }
+  input:focus { outline: none; border-color: #0a6ed1; }
+  .lookup-btn {
+    width: 100%;
+    background: #0a6ed1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .lookup-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .lookup-btn:active:not(:disabled) { opacity: 0.85; }
+  .key-box {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 20px 0;
+    font-family: monospace;
+    font-size: 20px;
+    letter-spacing: 1px;
+    word-break: break-all;
+    color: #22c55e;
+  }
+  .copy-btn {
+    background: #0a6ed1;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .copy-btn:active { opacity: 0.8; }
+  .error {
+    color: #ef4444;
+    font-size: 13px;
+    margin-top: 12px;
+    text-align: left;
+  }
+  .steps { text-align: left; font-size: 13px; opacity: 0.75; margin-top: 20px; line-height: 1.8; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔑 Recover Your License Key</h1>
+    <p>Enter your Lemon Squeezy order number to retrieve your CIM license key.</p>
+
+    <div class="hint">
+      💡 Your order number was included in the receipt email Lemon Squeezy sent you right after purchase. Search your inbox for "Lemon Squeezy" or "CIM" if you can't find it.
+    </div>
+
+    <div id="formView">
+      <div class="field">
+        <label for="orderIdInput">Order Number</label>
+        <input id="orderIdInput" placeholder="e.g. 123456" autofocus />
+      </div>
+      <button class="lookup-btn" id="lookupBtn">Find My License Key</button>
+      <div class="error" id="errorMsg" style="display:none;"></div>
+    </div>
+
+    <div id="result" style="display:none;">
+      <div class="key-box" id="licenseKey"></div>
+      <button class="copy-btn" id="copyBtn">Copy Key</button>
+      <div class="steps">
+        <strong>Next steps:</strong>
+        <ol style="margin: 8px 0 0; padding-left: 20px;">
+          <li>Open the CIM extension panel on your SAP CPI tenant</li>
+          <li>Go to <b>About → License Status</b></li>
+          <li>Enter this license key, then click Activate</li>
+        </ol>
+      </div>
+      <button class="copy-btn" id="searchAgainBtn" style="margin-top:14px; background:#334155;">Search Again</button>
+    </div>
+  </div>
+
+<script>
+  const API_BASE = "https://cim-monitoring-license-api.integrationmonitorcim.workers.dev";
+
+  const formView = document.getElementById("formView");
+  const orderIdInput = document.getElementById("orderIdInput");
+  const lookupBtn = document.getElementById("lookupBtn");
+  const errorMsg = document.getElementById("errorMsg");
+  const resultEl = document.getElementById("result");
+
+  async function lookupKey() {
+    const orderId = orderIdInput.value.trim();
+    errorMsg.style.display = "none";
+
+    if (!orderId) {
+      errorMsg.textContent = "Please enter your order number.";
+      errorMsg.style.display = "block";
+      return;
+    }
+
+    lookupBtn.disabled = true;
+    lookupBtn.textContent = "Searching...";
+
+    try {
+      const res = await fetch(API_BASE + "/lookup-by-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId })
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        showKey(data.licenseKey);
+      } else {
+        errorMsg.textContent = data.message || "Could not find a license for that order number. Double-check it against your receipt email, or contact support.";
+        errorMsg.style.display = "block";
+      }
+    } catch (err) {
+      errorMsg.textContent = "Could not reach the license server. Please try again in a moment.";
+      errorMsg.style.display = "block";
+    } finally {
+      lookupBtn.disabled = false;
+      lookupBtn.textContent = "Find My License Key";
+    }
+  }
+
+  function showKey(key) {
+    formView.style.display = "none";
+    resultEl.style.display = "block";
+    document.getElementById("licenseKey").textContent = key;
+  }
+
+  lookupBtn.addEventListener("click", lookupKey);
+  orderIdInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") lookupKey();
+  });
+
+  document.getElementById("copyBtn").addEventListener("click", () => {
+    const key = document.getElementById("licenseKey").textContent;
+    navigator.clipboard.writeText(key).then(() => {
+      const btn = document.getElementById("copyBtn");
+      const original = btn.textContent;
+      btn.textContent = "Copied!";
+      setTimeout(() => { btn.textContent = original; }, 1500);
+    });
+  });
+
+  document.getElementById("searchAgainBtn").addEventListener("click", () => {
+    resultEl.style.display = "none";
+    formView.style.display = "block";
+    orderIdInput.value = "";
+    orderIdInput.focus();
+  });
+</script>
+</body>
+</html>
