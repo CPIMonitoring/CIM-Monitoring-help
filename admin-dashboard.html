@@ -301,7 +301,7 @@
       <div id="licensesPage" style="display:none;">
         <div class="summary-row" id="licensesSummary"></div>
         <div class="search-row">
-          <input id="licenseSearchInput" class="search-input" placeholder="Search by email or license key..." />
+          <input id="licenseSearchInput" class="search-input" placeholder="Search by license key..." />
           <div class="filter-tabs" id="licenseFilterTabs">
             <div class="filter-tab active" data-filter="all">All</div>
             <div class="filter-tab" data-filter="active">Active</div>
@@ -408,7 +408,6 @@
 
       return `
         <tr class="${rowClass[r.status] || ""}">
-          <td>${escapeHtml(r.email)}</td>
           <td class="mono">${escapeHtml(r.transactionId)}${keyDisplay}</td>
           <td>${badge}</td>
           <td class="small-muted">${date}</td>
@@ -419,7 +418,7 @@
     tableContainer.innerHTML = `
       <table>
         <thead>
-          <tr><th>Email</th><th>Transaction ID</th><th>Status</th><th>Submitted</th><th>Actions</th></tr>
+          <tr><th>Transaction ID</th><th>Status</th><th>Submitted</th><th>Actions</th></tr>
         </thead>
         <tbody>${rows}</tbody>
       </table>`;
@@ -438,7 +437,7 @@
     }
     if (search) {
       filtered = filtered.filter(l =>
-        l.email.toLowerCase().includes(search) || l.licenseKey.toLowerCase().includes(search)
+        l.licenseKey.toLowerCase().includes(search)
       );
     }
 
@@ -497,7 +496,6 @@
       return `
         <tr class="${rowClass[l.status] || ""}">
           <td class="mono">${escapeHtml(l.licenseKey)}${sourceTag}${linked}</td>
-          <td>${escapeHtml(l.email)}</td>
           <td>${badge}</td>
           <td class="small-muted">${date}</td>
           <td>${deviceCell}</td>
@@ -508,7 +506,7 @@
     container.innerHTML = `
       <table>
         <thead>
-          <tr><th>License Key</th><th>Email</th><th>Status</th><th>Created</th><th>Devices</th><th>Actions</th></tr>
+          <tr><th>License Key</th><th>Status</th><th>Created</th><th>Devices</th><th>Actions</th></tr>
         </thead>
         <tbody>${rows}</tbody>
       </table>`;
@@ -574,7 +572,6 @@
 
       const rows = [
         ["Order #", o.orderNumber],
-        ["Customer", `${o.customerName} (${o.customerEmail})`],
         ["Product", o.variantName ? `${o.productName} — ${o.variantName}` : o.productName],
         ["Status", o.statusFormatted + (o.testMode ? " (test mode)" : "")],
         ["Total", `${o.totalFormatted} ${o.currency}`],
