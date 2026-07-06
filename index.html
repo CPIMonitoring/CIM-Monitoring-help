@@ -538,7 +538,7 @@ const FEATURES = [
     "Supports three named environments: DEV, TEST, and PROD.",
     "Register an environment: open the tab you're logged into that tenant on, open the extension, go to Compare Runtime, and click Register Current Tenant as DEV / TEST / PROD.",
     "Open each tenant in its own browser tab (logged into DEV, TEST, PROD simultaneously across tabs), register each one, then run the comparison from any tab.",
-    "Each registered environment saves its own origin URL and credentials independently — you can register DEV with one user and PROD with another.",
+    "Each registered environment saves only its origin URL locally in your browser — no credentials are stored; each tab uses its own existing SAP session.",
     "Compare From / Compare To dropdowns: select any two of DEV, TEST, PROD.",
     "Results show: artifact name, version and status on each side. Highlights version mismatches and missing artifacts in red.",
     "Export CSV and Export Excel — column headers use the actual registered environment names rather than generic Left/Right labels.",
@@ -590,7 +590,8 @@ const FEATURES = [
     "Per-page refresh: Cloud Monitoring → messages | Edge Monitoring → edge messages | JMS → queues | Certificates → certs | Artifact Runtime → artifacts + execution data | Dependency → dependency signals.",
     "Auto refresh runs silently in the background without reloading the full page — preserves scroll position, selected rows, and search text.",
     "Auto refresh intervals: Dashboard every 60s, Cloud/Edge Monitoring every 30s, JMS Queues every 60s, Artifact Overview every 120s. All other pages are manual only.",
-    "Last Refresh indicator: green = fresh, amber = 1 min old, red = 2+ mins old."
+    "Last Refresh indicator: green = fresh, amber = 1 min old, red = 2+ mins old.",
+    "Same-tenant, multiple tabs: if you open the same SAP tenant in two tabs, a one-time-per-session notice reminds you that changes in one tab (like an undeploy) won't appear in the other until you refresh."
   ]},
   { group: "Utilities", icon: "🎛️", title: "Header Buttons & CPI Pulse Button", tag: "Refresh, Alerts, Search, context switch, clock, and the button itself.", points: [
     "🔄 Refresh — manual refresh for the current page, with colour-coded staleness signal.",
