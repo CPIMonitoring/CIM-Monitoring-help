@@ -262,6 +262,8 @@
       <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f0625f;"></span>A dedicated Packages page inside CPI Pulse itself — search, filter by type/status/package, export, and save views, without opening SAP's design page.</div>
       <div class="beyond-item"><span class="beyond-dot" style="--bdot:#5fb4ff;"></span>Failed payload comparisons show exactly what's missing, extra, or different field by field — not just a pass/fail result.</div>
       <div class="beyond-item"><span class="beyond-dot" style="--bdot:#34d399;"></span>Custom Header search and filtering — view all custom headers for a message in Message Journey, and filter monitoring by header Name/Value combined with Sender, Receiver, Custom Status and iFlow.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f5b945;"></span>Bulk Activate and Deactivate for JMS queues — start or stop multiple queues in one action, something SAP's own JMS Queue Monitor doesn't offer at all.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#5fb4ff;"></span>Where Used for JMS queues — select any queue and instantly see every artifact that references it.</div>
     </div>
   </div>
 </section>
@@ -318,13 +320,13 @@
     <div class="section-head">
       <span class="eyebrow">Simple pricing</span>
       <h2>One price. Own it forever.</h2>
-      <p>Try everything free for 45 days. If it earns a place on your SAP page, unlock it once — no subscription, no renewals.</p>
+      <p>Try everything free for 30 days. If it earns a place on your SAP page, unlock it once — no subscription, no renewals.</p>
     </div>
     <div class="price-grid">
       <div class="price-card">
         <div class="stage-label" style="margin-bottom:6px;">// free trial</div>
         <div class="price-tag">Free</div>
-        <div class="price-sub">45 days, full access, no card required</div>
+        <div class="price-sub">30 days, full access, no card required</div>
         <ul class="price-list">
           <li>Every feature unlocked from first install — nothing gated during the trial.</li>
           <li>No credit card, no account, no sign-up screen.</li>
@@ -433,6 +435,7 @@ const FEATURES = [
     "Trace messages by Correlation ID, Message ID, Application Message ID, or Custom Status.",
     "Detail panel shows: iFlow, Package, Status, Duration, Log Level, Sender, Receiver, Message ID, Correlation ID, Application Message ID, Custom Status.",
     "Show Custom Headers button on the Message Details panel — fetches and displays all custom header Name/Value pairs for the selected message on demand.",
+    "Error Details button on any FAILED message — fetches and shows the exact underlying failure reason (e.g. a duplicate data store entry, mapping error, or connectivity failure), without digging through SAP's own logs.",
     "Message ID and Correlation ID are clickable links — opens SAP Integration Suite Monitoring in a new tab, automatically filtered to that identifier.",
     "Standard mode: server-side OData exact match by Correlation ID or Message ID.",
     "Advanced mode: client-side filter by Application Message ID, Application Type, or Custom Status.",
@@ -442,11 +445,13 @@ const FEATURES = [
   { group: "Artifacts", icon: "🧩", title: "Artifact Overview — Artifacts Tab", tag: "Deployed artifacts, sorted, tagged, with bulk operations.", points: [
     "Shows all deployed runtime artifacts sorted by type (Integration Flow → Message Mapping → Script Collection → Value Mapping) then alphabetically by name within each type.",
     "Type filter dropdown: filter by Integration Flow, Script Collection, Mapping, or Value Mapping.",
+    "Saved Views: save your current type and tag filter combination as a named view, restore it in one click — same pattern as Dependency Signals.",
     "Pagination: Previous / Next with page number and total count shown.",
     "Select All checkbox in the table header: selects/deselects all rows on the current page.",
     "Custom Tags: add coloured tags to any artifact using the 🏷️ edit button. Tags stored in chrome.storage.local per tenant — survives browser cache clear. Filter bar appears above the table when tags exist.",
     "Bulk operations on selected artifacts: Restart iFlow, Bulk Undeploy, Bulk iFlow Trace.",
     "Click any artifact name to open its detail panel — runtime status, version, deployed by, deployed on, last execution, last run age, lock status.",
+    "View Error button appears next to the status of any FAILED artifact — fetches and shows the real deploy failure reason inline, without leaving the page.",
     "Deployed On column shows when each artifact was last deployed, in d/M/yyyy, HH:mm:ss format.",
     "Last Execution shows a clickable 'No execution — View messages' link — navigates to Cloud Monitoring filtered for that iFlow over 7 days.",
     "Export CSV and Export Excel — exports Name, Type, Runtime Status for all filtered artifacts."
@@ -467,9 +472,12 @@ const FEATURES = [
     "Status filter: All, Deployed, Not Deployed, or Error — combine with the type filter and free-text search.",
     "Search box matches against package name, artifact name, or artifact type at once.",
     "Deployed status badge with version number shown next to every artifact, refreshed on demand.",
+    "Bulk Deploy: select multiple Integration Flows and deploy them straight from the design-time view, even if never deployed before — no need to open each one individually.",
+    "Bulk Undeploy: select multiple deployed artifacts and undeploy them together, right from the Current Tenant tab.",
     "Export CSV and Export Excel — respects whatever filters and search are currently active.",
     "Saved Views: save any combination of type, status, and search as a named view, restore it in one click.",
     "Manual refresh clears the package and runtime cache so you always see current deployment state.",
+    "Current Tenant tab (default): works immediately on whatever SAP tenant page you're on — no setup required.",
     "DEV, TEST, and PROD tabs: once an environment is registered (see Compare Runtime), browse its packages and artifacts with the same filters, deploy status, and export — no need to switch browser tabs.",
     "Compare All tab: pick any two of DEV, TEST, or PROD (each must be registered via Compare Runtime) and see every artifact side by side — status, version, and a clear flag for anything that differs or only exists in one environment.",
     "Cloud only — blocked in Edge context, since package design data is a Cloud Integration concept."
@@ -498,34 +506,44 @@ const FEATURES = [
     "Cloud only — blocked in Edge context."
   ]},
 
-  { group: "Infrastructure", icon: "📜", title: "Certificate Overview", tag: "Critical / Warning / Healthy at a glance, with live search.", points: [
-    "Shows all certificates with expiry status — Critical (below 30 days), Warning, Healthy.",
-    "Colour-coded counts at a glance.",
-    "Search box: filters by name, type, owner, or last modified date — updates the table instantly as you type.",
-    "Copy button on each row: copies the certificate name to clipboard in one click.",
-    "Cloud only — blocked in Edge context."
+  { group: "Infrastructure", icon: "🛡️", title: "Manage Security", tag: "Certificates and Security Material, in one place.", points: [
+    "Two tabs: Certificates and Security Material.",
+    "Certificates tab: shows all certificates with expiry status — Critical (below 30 days), Warning, Healthy. Colour-coded counts at a glance. Search by name, type, owner, or last modified date. Copy button on each row.",
+    "Security Material tab: every deployed credential and security artifact — name, type, deploy state, deployed by, deployed on, and description. Search across all fields.",
+    "Export CSV and Export Excel on both tabs.",
+    "Cloud only — blocked in Edge context.",
   ]},
-  { group: "Infrastructure", icon: "📨", title: "JMS Queues", tag: "Per-queue thresholds and overdue message counts.", points: [
-    "Queue table: Name, Messages, Size, Fill Grade, Status, Alert, Overdue columns.",
+  { group: "Infrastructure", icon: "📨", title: "Store Overview", tag: "JMS Queues, Partner Directory, and Data Store — all in one place.", points: [
+    "Three tabs: JMS Queues, Partner Directory, and Data Store — always opens on JMS Queues first.",
+    "JMS Queues table: Name, Messages, Size, Status, Alert, Overdue columns — paginated 100 queues at a time for tenants with many queues.",
+    "Bulk Activate and Deactivate: select multiple queues and start or stop them together in one action — not available in SAP's own UI at all.",
+    "Where Used: select one or more queues and see every artifact that references them, without leaving the page.",
     "Alert column: 🔴 Critical or 🟡 Warning based on configurable thresholds.",
-    "Overdue column: 🔴 count of messages past their OverdueAt timestamp per queue — fetched live from queue message API.",
-    "Queues sorted alphabetically by name.",
+    "Overdue count is on-demand: click Check per queue, or Check All Overdue for the current page — nothing fetches automatically, so the tab opens fast even on tenants with thousands of messages.",
     "⚙️ Thresholds: set warn/critical thresholds globally or per individual queue — stored in chrome.storage.local per tenant, survives browser cache clear.",
-    "Search box: filters by queue name, status, size, or message count without losing focus.",
-    "Filter toggle: show all queues or only queues with messages.",
+    "View Messages per queue: loads 100 messages at a time with Previous/Next — even for queues with thousands of messages, only what's needed is rendered.",
+    "Data Store tab: every SAP data store as one row with entry count, an Overdue column, and a View Messages action — see Status (On Time/Overdue), write date, overdue date, and delete date per entry, with MPL ID linking straight into Message Journey.",
+    "Total Stores and total Overdue entry counts shown at the top of the Data Store tab, updated on every refresh.",
+    "Search box: filters by name across whichever tab is active.",
     "Cloud only — blocked in Edge context."
   ]},
   { group: "Infrastructure", icon: "🔔", title: "Alerts", tag: "Every tenant alert, consolidated in one place.", points: [
-    "Consolidates all tenant alerts: failed messages, certificate expiry, JMS queue thresholds, overdue messages, error artifacts.",
+    "Consolidates alerts from six sources: failed/escalated messages, certificate expiry, JMS queue thresholds and overdue counts, failed runtime artifacts (named individually), overdue Data Store entries, and locked artifacts.",
     "JMS alerts show overdue message count when present, e.g. 'ORDER_QUEUE: 150 messages — ⚠️ 12 overdue'.",
+    "Failed artifacts are listed by name with a Go to Artifacts link — not just a count.",
+    "Data Store and Locked Artifacts show a total count with a direct link into that tab, instead of listing every entry.",
+    "Every alert row includes a Go-to link that jumps straight to the relevant page, and each of those pages has a working Back button to return to Alerts.",
     "Alert button (🔔) in header: click to open Alerts — click again to return to the previous page you were on.",
-    "Cloud only — blocked in Edge context."
+    "Cloud only — blocked in Edge context.",
   ]},
   { group: "Infrastructure", icon: "📦", title: "Packages Overview (Integration Suite Design Page)", tag: "Deployment status and version directly on SAP's own design page.", points: [
     "Appears as a blue Packages button on the SAP Integration Suite design page (/shell/design) — next to the Design page title.",
     "Shows all packages and their artifacts in a popup, sorted by type: Integration Flow, Message Mapping, Value Mapping, Script Collection, API.",
+    "Type filter dropdown narrows the list to one artifact type at a time, combinable with the search box.",
     "Each artifact row shows: checkbox, name, type badge (colour-coded), and deployed status badge.",
     "Deployed status badge: Deployed (green), Error (red), Not Deployed (grey) — with deployed version number (e.g. v1.2) next to it.",
+    "Deploy button: deploy selected Integration Flows or Value Mappings directly from this popup, without opening the extension's own Packages page.",
+    "Undeploy and Activate Trace buttons work the same way, for any artifact type.",
     "Each package header shows total artifact count, ✅ deployed count, and ⬜ not deployed count.",
     "Search box: filters by artifact name, type, or package name — matching text highlighted.",
     "Select All checkbox for bulk operations.",
@@ -582,7 +600,7 @@ const FEATURES = [
     "Export Excel: real .xlsx file (Office Open XML format) — numbers exported as numeric cells, not text.",
     "Export All CSV: fetches all pages server-side and exports as a single file — available in Cloud Monitoring and Edge Monitoring.",
     "Export filenames include time range, page number, and record count, e.g. message-overview-24h-page1-200records.csv.",
-    "Available across: Cloud Monitoring, Edge Monitoring, Artifact Overview, Artifact Runtime, JMS Queues, Dependency Signals, Certificate Overview."
+    "Available across: Cloud Monitoring, Edge Monitoring, Artifact Overview, Artifact Runtime, JMS Queues, Dependency Signals, Manage Security."
   ]},
   { group: "Utilities", icon: "🔄", title: "Auto Refresh & Manual Refresh", tag: "Per-page targeted refresh; Dashboard refresh is the broad one.", points: [
     "Manual Refresh (🔄 button in header): refreshes the page you are currently on only — does NOT refresh all pages at once.",
@@ -605,10 +623,10 @@ const FEATURES = [
     "CPI Pulse button updates every 60 seconds and is draggable — position is saved and restored after page reload."
   ]},
 
-  { group: "Account", icon: "🔑", title: "License & Trial", tag: "45 days free, then a one-time license unlocks everything.", points: [
-    "CPI Pulse includes a 45-day free trial — full access to all features from first install, no credit card required.",
+  { group: "Account", icon: "🔑", title: "License & Trial", tag: "30 days free, then a one-time license unlocks everything.", points: [
+    "CPI Pulse includes a 30-day free trial — full access to all features from first install, no credit card required.",
     "Trial badge: shown below 'Integration Suite Monitor' in the sidebar — ⏳ Trial: X days left (amber), ✅ Licensed (green), 🔒 Trial Expired (red).",
-    "After 45 days: only Dashboard, Tools, and About remain accessible until a valid license key is entered.",
+    "After 30 days: only Dashboard, Tools, and About remain accessible until a valid license key is entered.",
     "Pay by card (worldwide) or UPI (India) — both available directly from the License Status panel.",
     "Activate: About → License Status → enter your license key (format KEY-XXXXXXXX) → Activate. Full access restored permanently.",
     "Revoke: About → License Status → Remove License."
