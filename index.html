@@ -264,6 +264,7 @@
       <div class="beyond-item"><span class="beyond-dot" style="--bdot:#34d399;"></span>Custom Header search and filtering — view all custom headers for a message in Message Journey, and filter monitoring by header Name/Value combined with Sender, Receiver, Custom Status and iFlow.</div>
       <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f5b945;"></span>Bulk Activate and Deactivate for JMS queues — start or stop multiple queues in one action, something SAP's own JMS Queue Monitor doesn't offer at all.</div>
       <div class="beyond-item"><span class="beyond-dot" style="--bdot:#5fb4ff;"></span>Where Used for JMS queues — select any queue and instantly see every artifact that references it.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#34d399;"></span>The extension remembers which page and tab you were last on — Packages environment, Artifact Overview sub-tab — and restores it after a reload, instead of always reopening on Dashboard.</div>
     </div>
   </div>
 </section>
@@ -344,7 +345,7 @@
           🎉 Use code <strong style="letter-spacing:0.5px;">FIRST50</strong> at checkout for <strong>20% off</strong>
         </div>
         <ul class="price-list">
-          <li>Pay by card (worldwide, €3.99) or UPI (India, ₹399) — both handled directly inside the extension. UPI avoids card currency-conversion fees for Indian customers.</li>
+          <li>Pay by card (worldwide, €3.99 via Lemon Squeezy) or UPI (India, ₹399) — both handled directly inside the extension. Indian customers can use either option; UPI avoids the currency-conversion fees a card payment would otherwise incur.</li>
           <li>One-time purchase, yours permanently — no renewals, no recurring charge.</li>
           <li>Free updates and new features included for as long as you use CPI Pulse.</li>
         </ul>
@@ -540,6 +541,7 @@ const FEATURES = [
     "Appears as a blue Packages button on the SAP Integration Suite design page (/shell/design) — next to the Design page title.",
     "Shows all packages and their artifacts in a popup, sorted by type: Integration Flow, Message Mapping, Value Mapping, Script Collection, API.",
     "Type filter dropdown narrows the list to one artifact type at a time, combinable with the search box.",
+    "Package filter dropdown narrows the popup to a single package, and a Status filter narrows to Deployed, Not Deployed, or Error — all three filters combine with each other and with search.",
     "Each artifact row shows: checkbox, name, type badge (colour-coded), and deployed status badge.",
     "Deployed status badge: Deployed (green), Error (red), Not Deployed (grey) — with deployed version number (e.g. v1.2) next to it.",
     "Deploy button: deploy selected Integration Flows or Value Mappings directly from this popup, without opening the extension's own Packages page.",
