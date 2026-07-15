@@ -243,7 +243,7 @@
     </div>
     <div class="beyond-grid">
       <div class="beyond-item"><span class="beyond-dot" style="--bdot:#5fb4ff;"></span>Multi-select iFlow filtering with live status counts, clickable sender/receiver, and server-side Custom Status search — across both Cloud and Edge Monitoring.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#34d399;"></span>Bulk undeploy, bulk restart, and bulk trace activation — act on multiple selected artifacts in one go instead of one at a time.</div>
+      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#34d399;"></span>Bulk deploy, bulk redeploy, bulk undeploy, bulk restart, and bulk trace activation — act on multiple selected artifacts in one go instead of one at a time, across Integration Flows, Value Mappings, Message Mappings, and Script Collections.</div>
       <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f5b945;"></span>Saved filter views in monitoring — save a combination of range, status, iFlow, sender and receiver as a named view and restore it instantly.</div>
       <div class="beyond-item"><span class="beyond-dot" style="--bdot:#a78bfa;"></span>Custom coloured tags on iFlows — label and group artifacts your own way, independent of SAP packages.</div>
       <div class="beyond-item"><span class="beyond-dot" style="--bdot:#22d3ee;"></span>Per-queue JMS thresholds — set individual warning and critical alert levels for each queue, not just one tenant-wide setting.</div>
@@ -260,7 +260,6 @@
       <div class="beyond-item"><span class="beyond-dot" style="--bdot:#a78bfa;"></span>Live deployment status marker shown directly next to each artifact's name on SAP's own design page — no need to switch screens.</div>
       <div class="beyond-item"><span class="beyond-dot" style="--bdot:#22d3ee;"></span>A Packages button added straight into SAP's design page header — browse every package and artifact with deployment status without leaving the page.</div>
       <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f0625f;"></span>A dedicated Packages page inside CPI Pulse itself — search, filter by type/status/package, export, and save views, without opening SAP's design page.</div>
-      <div class="beyond-item"><span class="beyond-dot" style="--bdot:#5fb4ff;"></span>Failed payload comparisons show exactly what's missing, extra, or different field by field — not just a pass/fail result.</div>
       <div class="beyond-item"><span class="beyond-dot" style="--bdot:#34d399;"></span>Custom Header search and filtering — view all custom headers for a message in Message Journey, and filter monitoring by header Name/Value combined with Sender, Receiver, Custom Status and iFlow.</div>
       <div class="beyond-item"><span class="beyond-dot" style="--bdot:#f5b945;"></span>Bulk Activate and Deactivate for JMS queues — start or stop multiple queues in one action, something SAP's own JMS Queue Monitor doesn't offer at all.</div>
       <div class="beyond-item"><span class="beyond-dot" style="--bdot:#5fb4ff;"></span>Where Used for JMS queues — select any queue and instantly see every artifact that references it.</div>
@@ -473,8 +472,10 @@ const FEATURES = [
     "Status filter: All, Deployed, Not Deployed, or Error — combine with the type filter and free-text search.",
     "Search box matches against package name, artifact name, or artifact type at once.",
     "Deployed status badge with version number shown next to every artifact, refreshed on demand.",
-    "Bulk Deploy: select multiple Integration Flows and deploy them straight from the design-time view, even if never deployed before — no need to open each one individually.",
+    "Bulk Deploy: select multiple Integration Flows, Value Mappings, Message Mappings, or Script Collections and deploy them straight from the design-time view, even if never deployed before — no need to open each one individually.",
+    "Bulk Redeploy: restart multiple already-deployed artifacts with their current design-time version in one action, using the same checkbox selection as Bulk Undeploy.",
     "Bulk Undeploy: select multiple deployed artifacts and undeploy them together, right from the Current Tenant tab.",
+    "Select All Visible: combine with the type filter to select every artifact of one type at once — e.g. filter to Integration Flow, then select all, then deploy or undeploy them together.",
     "Export CSV and Export Excel — respects whatever filters and search are currently active.",
     "Saved Views: save any combination of type, status, and search as a named view, restore it in one click.",
     "Manual refresh clears the package and runtime cache so you always see current deployment state.",
@@ -544,7 +545,7 @@ const FEATURES = [
     "Package filter dropdown narrows the popup to a single package, and a Status filter narrows to Deployed, Not Deployed, or Error — all three filters combine with each other and with search.",
     "Each artifact row shows: checkbox, name, type badge (colour-coded), and deployed status badge.",
     "Deployed status badge: Deployed (green), Error (red), Not Deployed (grey) — with deployed version number (e.g. v1.2) next to it.",
-    "Deploy button: deploy selected Integration Flows or Value Mappings directly from this popup, without opening the extension's own Packages page.",
+    "Deploy button: deploy selected Integration Flows, Value Mappings, Message Mappings, or Script Collections directly from this popup, without opening the extension's own Packages page — checking an already-deployed artifact and clicking Deploy redeploys/restarts it.",
     "Undeploy and Activate Trace buttons work the same way, for any artifact type.",
     "Each package header shows total artifact count, ✅ deployed count, and ⬜ not deployed count.",
     "Search box: filters by artifact name, type, or package name — matching text highlighted.",
