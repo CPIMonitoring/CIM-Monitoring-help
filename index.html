@@ -220,16 +220,31 @@
 </header>
 
 <section style="background:var(--bg); padding:48px 0 0;">
-  <div class="wrap" style="max-width:900px;">
-    <div style="position:relative; width:100%; padding-top:56.25%; border-radius:14px; overflow:hidden; border:1px solid var(--line); box-shadow:0 20px 50px -28px rgba(0,0,0,0.6);">
-      <iframe
-        src="https://www.youtube-nocookie.com/embed/cUIoPUV4BoE"
-        title="CPI Pulse — Integration Suite Monitor demo"
-        style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-        loading="lazy"
-      ></iframe>
+  <div class="wrap" style="max-width:1100px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+
+      <div>
+        <div style="position:relative; width:100%; padding-top:56.25%; border-radius:14px; overflow:hidden; border:1px solid var(--line); box-shadow:0 20px 50px -28px rgba(0,0,0,0.6);">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/vS1adnCDbZc"
+            title="How to Install and Integration Suite Page"
+            style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+        </div>
+        <div style="text-align:center; margin-top:10px; font-size:14px; opacity:0.75;">How to Install &amp; Integration Suite Page</div>
+      </div>
+
+      <div>
+        <div style="position:relative; width:100%; padding-top:56.25%; border-radius:14px; overflow:hidden; border:1px dashed var(--line); display:flex; align-items:center; justify-content:center; background:var(--panel, rgba(127,127,127,0.06));">
+          <span style="opacity:0.5; font-size:14px;">Video coming soon</span>
+        </div>
+        <div style="text-align:center; margin-top:10px; font-size:14px; opacity:0.75;">&nbsp;</div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -476,6 +491,7 @@ const FEATURES = [
     "Bulk Redeploy: restart multiple already-deployed artifacts with their current design-time version in one action, using the same checkbox selection as Bulk Undeploy.",
     "Bulk Undeploy: select multiple deployed artifacts and undeploy them together, right from the Current Tenant tab.",
     "Select All Visible: combine with the type filter to select every artifact of one type at once — e.g. filter to Integration Flow, then select all, then deploy or undeploy them together.",
+    "Bulk Compliance Check: run SAP's own Design Guidelines validation across multiple selected Integration Flows at once — Pass/Fail badge with issue count per flow, expandable rule-by-rule breakdown (severity, mandatory flag, guideline and violation text), and a CSV export. Results persist across reloads.",
     "Export CSV and Export Excel — respects whatever filters and search are currently active.",
     "Saved Views: save any combination of type, status, and search as a named view, restore it in one click.",
     "Manual refresh clears the package and runtime cache so you always see current deployment state.",
