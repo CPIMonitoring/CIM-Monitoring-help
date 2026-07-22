@@ -689,6 +689,23 @@ const FEATURES = [
     "Lists every release with what changed, newest version first.",
     "No popups, no dismissing — revisit anytime to see what's changed since you last checked.",
     "This page (cpimonitoring.github.io) is the full feature reference; What's New inside CPI Pulse is just the changelog."
+  ]},
+  { group: "Releases", icon: "🚀", title: "v6.8.10 — July 19, 2026", tag: "Latest release: endpoints, log levels, cross-environment parameter compare, expanded search & signals.", points: [
+    "Dashboard — new \"Tenant Settings\" card (Transport, Malware Scanner, SAP PO System, Runtime Profile), persisted to storage, only refreshed on first load or an explicit Refresh button.",
+    "Alerts — Malware Scanner off flagged as a Warning alert.",
+    "Alerts — Dead Letter Queue detection (matches \"DLQ\" or \"dead letter\" in queue name), flagged Critical on any message regardless of normal thresholds.",
+    "Artifact Overview — \"Show Endpoint\" for Integration Flows, resolved via the correct SAP API.",
+    "Artifact Overview — Endpoint type badges: HTTP, JMS, Timer (cleaned Quartz names), ProcessDirect, generic Adapter.",
+    "Artifact Overview — \"Create Test Case\" directly from an HTTP endpoint, with duplicate detection.",
+    "Data Store — payload viewer: decodes SAP's base64 ZIP format into readable body + headers, with Copy/Download.",
+    "Security Material — bulk delete with type-DELETE-to-confirm safety.",
+    "Packages Compare — new \"Compare Externalized Parameters\" section: pick an IFlow and two registered environments, see every externalized value side by side with a clear match/differs result per parameter.",
+    "Packages Compare — Type filter (Integration Flow, Script Collection, etc.) alongside the existing Match/Differs filter on the main comparison table.",
+    "Dependency Signals — expanded from 3 to 6 object types: added Data Store (overdue alert count), Locked Artifacts, and Credentials (failed deploy state).",
+    "Global Search — expanded from 3 to 8 categories: added Credentials, Data Stores, Packages, Test Cases, and Partner Directory.",
+    "Global Search — \"→ Go to Page\" button on every result section, jumping straight to the right page and tab instead of just showing the match.",
+    "Artifact Overview — \"Show Log Level\" bulk action: select Integration Flows or APIs via the same checkboxes used for Bulk Trace, see each one's actual current log level (INFO/DEBUG/TRACE) and whether trace is active, read directly from SAP's own runtime configuration.",
+    "Compliance Check — a rule is now only counted as a failure if it's applicable, failed, and wasn't skipped; a skipped rule no longer counts as a failure even if marked FAIL."
   ]}
 ];
 
