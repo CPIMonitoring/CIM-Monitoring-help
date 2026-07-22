@@ -4,8 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="referrer" content="strict-origin-when-cross-origin" />
-<title>CPI Pulse – Integration Suite Monitor</title>
-<meta name="description" content="Chrome and Edge extension for SAP Integration Suite monitoring. Cloud and Edge messages, artifacts, JMS queues, certificates, dependency signals, and tenant comparison — all from one panel on your SAP page." />
+<title>CPI Pulse - SAP Integration Suite</title>
+<meta name="description" content="Chrome and Edge extension for SAP Integration Suite. Cloud and Edge messages, artifacts, JMS queues, certificates, dependency signals, and tenant comparison — all from one panel on your SAP page." />
 <link rel="icon" href="data:," />
 <style>
   :root{
@@ -228,7 +228,7 @@
         <div style="position:relative; width:100%; padding-top:56.25%; border-radius:14px; overflow:hidden; border:1px solid var(--line); box-shadow:0 20px 50px -28px rgba(0,0,0,0.6);">
           <iframe
             src="https://www.youtube-nocookie.com/embed/vS1adnCDbZc"
-            title="How to Install and Integration Suite Page Features"
+            title="How to Install and Integration Suite Monitor Page Features"
             style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen
@@ -236,7 +236,7 @@
             referrerpolicy="strict-origin-when-cross-origin"
           ></iframe>
         </div>
-        <div style="text-align:center; margin-top:10px; font-size:14px; opacity:0.75;">How to Install &amp; Integration Suite Page Features</div>
+        <div style="text-align:center; margin-top:10px; font-size:14px; opacity:0.75;">How to Install &amp; Integration Suite Monitor Page Features</div>
       </div>
 
       <div>
@@ -419,7 +419,7 @@
 
 <footer>
   <div class="wrap foot-grid">
-    <div class="foot-copy">© 2026 CPI Pulse – Integration Suite Monitor. All rights reserved.</div>
+    <div class="foot-copy">© 2026 CPI Pulse - SAP Integration Suite. All rights reserved.</div>
     <div class="foot-links">
       <a href="mailto:integrationmonitorcim@gmail.com">integrationmonitorcim@gmail.com</a>
       <a href="#features">Features</a>
@@ -477,7 +477,7 @@ const FEATURES = [
     "Detail panel shows: iFlow, Package, Status, Duration, Log Level, Sender, Receiver, Message ID, Correlation ID, Application Message ID, Custom Status.",
     "Show Custom Headers button on the Message Details panel — fetches and displays all custom header Name/Value pairs for the selected message on demand.",
     "Error Details button on any FAILED message — fetches and shows the exact underlying failure reason (e.g. a duplicate data store entry, mapping error, or connectivity failure), without digging through SAP's own logs.",
-    "Message ID and Correlation ID are clickable links — opens SAP Integration Suite Monitoring in a new tab, automatically filtered to that identifier.",
+    "Message ID and Correlation ID are clickable links — opens SAP Integration Suiteing in a new tab, automatically filtered to that identifier.",
     "Standard mode: server-side OData exact match by Correlation ID or Message ID.",
     "Advanced mode: client-side filter by Application Message ID, Application Type, or Custom Status.",
     "Custom Status mode: server-side OData filter — fetches all matching records across pages, grouped by iFlow."
@@ -632,7 +632,7 @@ const FEATURES = [
     "Regular Test Cases — Sync interface: full comparison — HTTP status, iFlow processing (MPL) status, and the response payload against Expected Payload.",
     "Regular Test Cases — Async interface: checks only HTTP status and MPL status — the Expected Payload box is hidden and skipped, switching instantly when you change the dropdown.",
     "Run Selected: tick any combination and run them in one click — each row shows a live ⏳ Running… status, then updates in place to ✅/❌.",
-    "Result panel shows: HTTP status vs expected, iFlow processing status, payload match result, and every related iFlow triggered for that message with its own status — Correlation ID and Message ID are clickable links into SAP Integration Suite Monitoring.",
+    "Result panel shows: HTTP status vs expected, iFlow processing status, payload match result, and every related iFlow triggered for that message with its own status — Correlation ID and Message ID are clickable links into SAP Integration Suiteing.",
     "Failed payload comparisons show exactly what's wrong, not just pass/fail — missing fields, extra fields, and fields with a different value than expected, broken down field by field for JSON and line by line for XML/text.",
     "Copy Selected, Download Selected (Excel), and Delete Selected — bulk actions for ticked test cases.",
     "Test cases stored per tenant in chrome.storage.local — each tenant has its own independent set. Survives browser cache clear."
@@ -671,7 +671,7 @@ const FEATURES = [
 
   { group: "Account", icon: "🔑", title: "License & Trial", tag: "30 days free, then a one-time license unlocks everything.", points: [
     "CPI Pulse includes a 30-day free trial — full access to all features from first install, no credit card required.",
-    "Trial badge: shown below 'Integration Suite Monitor' in the sidebar — ⏳ Trial: X days left (amber), ✅ Licensed (green), 🔒 Trial Expired (red).",
+    "Trial badge: shown below 'Integration Suite' in the sidebar — ⏳ Trial: X days left (amber), ✅ Licensed (green), 🔒 Trial Expired (red).",
     "After 30 days: only Dashboard, Tools, and About remain accessible until a valid license key is entered.",
     "For full license enquiries, contact integrationmonitorcim@gmail.com or visit cpimonitoring.github.io.",
     "Activate: About → License Status → enter your license key (format KEY-XXXXXXXX) → Activate. Full access restored permanently.",
