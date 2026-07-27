@@ -443,6 +443,7 @@ const FEATURES = [
     "Dashboard refresh is the broadest — also clears idle iFlows, dependency signals, certificates, and JMS caches since the dashboard shows health data from all sources.",
     "Clicking status cards (Success, Failed, Escalated) navigates to Cloud or Edge Monitoring filtered by that status for the last hour. A ← Back to Dashboard button clears the dashboard-applied filters on return.",
     "Other pages refresh only their own data: Cloud Monitoring reloads messages, JMS reloads queues, Certificates reloads certs, etc.",
+    "Tenant Settings card: Transport, Malware Scanner, SAP PO System, and Runtime Profile status at a glance — persisted to storage, only refreshed on first load or an explicit Refresh.",
     "Last Refresh indicator: green (fresh), amber (1 min), red (2+ mins)."
   ]},
   { group: "Monitoring", icon: "📈", title: "Cloud Monitoring", tag: "Multi-filter message monitoring with snapshot cards and saved views.", points: [
@@ -501,7 +502,8 @@ const FEATURES = [
     "View Error button appears next to the status of any FAILED artifact — fetches and shows the real deploy failure reason inline, without leaving the page.",
     "Deployed On column shows when each artifact was last deployed, in d/M/yyyy, HH:mm:ss format.",
     "Last Execution shows a clickable 'No execution — View messages' link — navigates to Cloud Monitoring filtered for that iFlow over 7 days.",
-    "Create Test Case from an HTTP endpoint now pre-fills a demo Input Payload, so you have a working starting point instead of a blank field.",
+    "🔗 Show Endpoint for Integration Flows: resolves the real callable endpoint via SAP's API, with type badges — HTTP, JMS, Timer (cleaned Quartz names), ProcessDirect, or generic Adapter — so you know what you're looking at without opening the flow.",
+    "Create Test Case from an HTTP endpoint now pre-fills a demo Input Payload, so you have a working starting point instead of a blank field, and detects if a test case already exists for that endpoint instead of creating a duplicate.",
     "Create Test Case now generates a cleaner auto Test Case Name — dots, underscores and hyphens are stripped, and long iFlow names are cut at whole word boundaries instead of a flat character cut.",
     "Export CSV and Export Excel — exports Name, Type, Runtime Status for all filtered artifacts."
   ]},
@@ -549,9 +551,11 @@ const FEATURES = [
     "Scan depths: Last 1 Hour, 24h, Deep Scan 15d, Deep Scan 30d — restricted by tenant volume profile.",
     "Cloud only — blocked in Edge context."
   ]},
-  { group: "Artifacts", icon: "🕸", title: "Dependency Signals", tag: "Runtime artifacts, queues and certificates in one filterable view.", points: [
-    "Shows runtime artifacts, JMS queues, and certificates as dependency signals.",
-    "Supports dependency type filtering — filter to Runtime Artifact, JMS Queue, or Certificate.",
+  { group: "Artifacts", icon: "🕸", title: "Dependency Signals", tag: "Six object types, cross-referenced and one click from wherever they live.", points: [
+    "Shows Runtime Artifacts, JMS Queues, Certificates, Data Stores, Locked Artifacts, and Credentials as dependency signals — six object types in one filterable list.",
+    "Supports dependency type filtering — filter to any one of the six types, or view everything at once.",
+    "Data Store rows show overdue entry count; Credential rows show failed-deploy state — both surfaced right in the list, not just a name.",
+    "Every row's name is a clickable link — jumps straight to that object's real home (Store Overview, Manage Security, Locked Artifacts, or Artifact Overview, with any relevant search/tab pre-set) instead of just showing the match.",
     "Selected filter is remembered — persists when you navigate away and come back.",
     "Saved Views: save any filter combination as a named view and restore it in one click. Up to 10 saved views stored per tenant.",
     "Export CSV and Export Excel — exports the current filtered list.",
@@ -562,6 +566,7 @@ const FEATURES = [
     "Two tabs: Certificates and Security Material.",
     "Certificates tab: shows all certificates with expiry status — Critical (below 30 days), Warning, Healthy. Colour-coded counts at a glance. Search by name, type, owner, or last modified date. Copy button on each row.",
     "Security Material tab: every deployed credential and security artifact — name, type, deploy state, deployed by, deployed on, and description. Search across all fields.",
+    "Bulk delete on Security Material: select multiple items and delete them together — a typed DELETE confirmation is required first, since this can't be undone.",
     "Export CSV and Export Excel on both tabs.",
     "Cloud only — blocked in Edge context.",
   ]},
@@ -575,14 +580,16 @@ const FEATURES = [
     "⚙️ Thresholds: set warn/critical thresholds globally or per individual queue — stored in chrome.storage.local per tenant, survives browser cache clear.",
     "View Messages per queue: loads 100 messages at a time with Previous/Next — even for queues with thousands of messages, only what's needed is rendered.",
     "Data Store tab: every SAP data store as one row with entry count, an Overdue column, and a View Messages action — see Status (On Time/Overdue), write date, overdue date, and delete date per entry, with MPL ID linking straight into Message Journey.",
+    "Payload viewer per entry: decodes SAP's base64-encoded ZIP payload format into a readable body and headers, with Copy and Download for each.",
     "Bulk delete for Data Stores: select multiple stores (or all of them) and delete them in one action, or drill into a single store and bulk-delete just its entries — filterable to Overdue or On Time only first. A typed confirmation is required before anything is deleted, since this can't be undone.",
     "Total Stores and total Overdue entry counts shown at the top of the Data Store tab, updated on every refresh.",
     "Search box: filters by name across whichever tab is active.",
     "Cloud only — blocked in Edge context."
   ]},
   { group: "Infrastructure", icon: "🔔", title: "Alerts", tag: "Every tenant alert, consolidated in one place.", points: [
-    "Consolidates alerts from six sources: failed/escalated messages, certificate expiry, JMS queue thresholds and overdue counts, failed runtime artifacts (named individually), overdue Data Store entries, and locked artifacts.",
-    "JMS alerts show overdue message count when present, e.g. 'ORDER_QUEUE: 150 messages — ⚠️ 12 overdue'.",
+    "Consolidates alerts from seven sources: failed/escalated messages, certificate expiry, JMS queue thresholds and overdue counts, failed runtime artifacts (named individually), overdue Data Store entries, locked artifacts, and Malware Scanner status.",
+    "Malware Scanner off is flagged as a Warning alert — an easy setting to miss on a new or reconfigured tenant.",
+    "JMS alerts show overdue message count when present, e.g. 'ORDER_QUEUE: 150 messages — ⚠️ 12 overdue'. Any Dead Letter Queue (name contains \"DLQ\" or \"dead letter\") is flagged Critical the moment it holds a single message, bypassing the normal warn/critical thresholds — those messages already exhausted retry and need manual attention.",
     "Failed artifacts are listed by name with a Go to Artifacts link — not just a count.",
     "Data Store and Locked Artifacts show a total count with a direct link into that tab, instead of listing every entry.",
     "Every alert row includes a Go-to link that jumps straight to the relevant page, and each of those pages has a working Back button to return to Alerts.",
@@ -605,22 +612,24 @@ const FEATURES = [
     "5-minute cache — subsequent opens are instant."
   ]},
 
-  { group: "Cross-tenant", icon: "🔁", title: "Compare Runtime", tag: "Compare Dev, Test and Prod side by side, live.", points: [
+  { group: "Cross-tenant", icon: "🔁", title: "Compare Runtime", tag: "Compare Dev, Test, Preprod and Prod side by side, live.", points: [
     "Compares runtime artifacts between two Integration Suite environments — version mismatches, missing artifacts, and status differences side by side.",
-    "Supports three named environments: DEV, TEST, and PROD.",
-    "Register an environment: open the tab you're logged into that tenant on, open the extension, go to Compare Runtime, and click Register Current Tenant as DEV / TEST / PROD.",
-    "Open each tenant in its own browser tab (logged into DEV, TEST, PROD simultaneously across tabs), register each one, then run the comparison from any tab.",
+    "Supports four named environments: DEV, TEST, PREPROD, and PROD.",
+    "Register an environment: open the tab you're logged into that tenant on, open the extension, go to Compare Runtime, and click Register Current Tenant as DEV / TEST / PREPROD / PROD.",
+    "Open each tenant in its own browser tab (logged into DEV, TEST, PREPROD, PROD simultaneously across tabs), register each one, then run the comparison from any tab.",
     "Each registered environment saves only its origin URL locally in your browser — no credentials are stored; each tab uses its own existing SAP session.",
-    "Compare From / Compare To dropdowns: select any two of DEV, TEST, PROD.",
+    "Compare From / Compare To dropdowns: select any two of DEV, TEST, PREPROD, PROD.",
+    "Type filter (Integration Flow, Script Collection, etc.) alongside a Match/Differs filter on the comparison table, so you can narrow to just the artifact type or the outcome you care about.",
     "Results show: artifact name, version and status on each side. Highlights version mismatches and missing artifacts in red.",
+    "Compare Externalized Parameters: pick one IFlow and two registered environments, see every externalized value side by side with a clear ✅ Match / ⚠️ Differs result per parameter — no need to open each tenant's Manage Configuration screen separately.",
     "Export CSV and Export Excel — column headers use the actual registered environment names rather than generic Left/Right labels.",
     "Clear buttons: remove individual or all registered environments.",
     "Cloud only — blocked in Edge context."
   ]},
-  { group: "Cross-tenant", icon: "🌍", title: "Global Search", tag: "One box across artifacts, queues and certificates.", points: [
-    "Searches across runtime artifacts, JMS queues, and certificates in a single search box.",
+  { group: "Cross-tenant", icon: "🌍", title: "Global Search", tag: "One box across eight categories, with a link straight to each result.", points: [
+    "Searches across eight categories in a single search box: Runtime Artifacts, JMS Queues, Certificates, Credentials / Security Material, Data Stores, Packages, iFlow Runner test cases, and Partner Directory.",
     "Loads all data once when the page opens — subsequent searches filter in-memory instantly without additional API calls.",
-    "Results grouped by category: Artifacts, JMS Queues, Certificates.",
+    "Results grouped by category, each with a → Go to Page link that jumps straight to the right page and tab for that result instead of just showing the match.",
     "Not a message search — for searching MPL message logs use Cloud Monitoring or Edge Monitoring.",
     "Cloud only — blocked in Edge context."
   ]},
@@ -675,7 +684,7 @@ const FEATURES = [
     "Same-tenant, multiple tabs: if you open the same SAP tenant in two tabs, a one-time-per-session notice reminds you that changes in one tab (like an undeploy) won't appear in the other until you refresh."
   ]},
   { group: "Utilities", icon: "🎛️", title: "Header Buttons & CPI Pulse Button", tag: "Refresh, Alerts, Search, context switch, clock, and the button itself.", points: [
-    "🔄 Refresh — manual refresh for the current page, with colour-coded staleness signal.",
+    "🔄 Refresh — manual refresh for the current page, with colour-coded staleness signal. Press R anywhere in the panel to trigger it without reaching for the mouse.",
     "🔔 Alerts — opens the Alerts page; click again to return to the page you were on.",
     "🌍 Search — opens Global Search across artifacts, queues and certificates.",
     "☁️ Cloud / 🌐 Edge context switcher — toggles context; cloud-only pages are blocked in Edge with a clear message.",
@@ -706,23 +715,6 @@ const FEATURES = [
     "Lists every release with what changed, newest version first.",
     "No popups, no dismissing — revisit anytime to see what's changed since you last checked.",
     "This page (cpimonitoring.github.io) is the full feature reference; What's New inside CPI Pulse is just the changelog."
-  ]},
-  { group: "Releases", icon: "🚀", title: "v6.8.10 — July 19, 2026", tag: "Latest release: endpoints, log levels, cross-environment parameter compare, expanded search & signals.", points: [
-    "Dashboard — new \"Tenant Settings\" card (Transport, Malware Scanner, SAP PO System, Runtime Profile), persisted to storage, only refreshed on first load or an explicit Refresh button.",
-    "Alerts — Malware Scanner off flagged as a Warning alert.",
-    "Alerts — Dead Letter Queue detection (matches \"DLQ\" or \"dead letter\" in queue name), flagged Critical on any message regardless of normal thresholds.",
-    "Artifact Overview — \"Show Endpoint\" for Integration Flows, resolved via the correct SAP API.",
-    "Artifact Overview — Endpoint type badges: HTTP, JMS, Timer (cleaned Quartz names), ProcessDirect, generic Adapter.",
-    "Artifact Overview — \"Create Test Case\" directly from an HTTP endpoint, with duplicate detection.",
-    "Data Store — payload viewer: decodes SAP's base64 ZIP format into readable body + headers, with Copy/Download.",
-    "Security Material — bulk delete with type-DELETE-to-confirm safety.",
-    "Packages Compare — new \"Compare Externalized Parameters\" section: pick an IFlow and two registered environments, see every externalized value side by side with a clear match/differs result per parameter.",
-    "Packages Compare — Type filter (Integration Flow, Script Collection, etc.) alongside the existing Match/Differs filter on the main comparison table.",
-    "Dependency Signals — expanded from 3 to 6 object types: added Data Store (overdue alert count), Locked Artifacts, and Credentials (failed deploy state).",
-    "Global Search — expanded from 3 to 8 categories: added Credentials, Data Stores, Packages, Test Cases, and Partner Directory.",
-    "Global Search — \"→ Go to Page\" button on every result section, jumping straight to the right page and tab instead of just showing the match.",
-    "Artifact Overview — \"Show Log Level\" bulk action: select Integration Flows or APIs via the same checkboxes used for Bulk Trace, see each one's actual current log level (INFO/DEBUG/TRACE) and whether trace is active, read directly from SAP's own runtime configuration.",
-    "Compliance Check — a rule is now only counted as a failure if it's applicable, failed, and wasn't skipped; a skipped rule no longer counts as a failure even if marked FAIL."
   ]}
 ];
 
