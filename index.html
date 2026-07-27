@@ -495,6 +495,8 @@ const FEATURES = [
     "Select All checkbox in the table header: selects/deselects all rows on the current page.",
     "Custom Tags: add coloured tags to any artifact using the 🏷️ edit button. Tags stored in chrome.storage.local per tenant — survives browser cache clear. Filter bar appears above the table when tags exist.",
     "Bulk operations on selected artifacts: Restart iFlow, Bulk Undeploy, Bulk iFlow Trace.",
+    "Bulk iFlow Trace: TRACE auto-resets to INFO after 10 minutes — SAP can take a few seconds to actually apply TRACE after activation is accepted, so use \"📋 Show Log Level\" to confirm it's active before sending a test message.",
+    "Show Log Level: reads back the real current Log Level and Trace Active status for selected artifacts directly from SAP — the reliable way to confirm a trace activation actually took effect.",
     "Click any artifact name to open its detail panel — runtime status, version, deployed by, deployed on, last execution, last run age, lock status.",
     "View Error button appears next to the status of any FAILED artifact — fetches and shows the real deploy failure reason inline, without leaving the page.",
     "Deployed On column shows when each artifact was last deployed, in d/M/yyyy, HH:mm:ss format.",
@@ -622,6 +624,14 @@ const FEATURES = [
     "Not a message search — for searching MPL message logs use Cloud Monitoring or Edge Monitoring.",
     "Cloud only — blocked in Edge context."
   ]},
+  { group: "Cross-tenant", icon: "⌨️", title: "Keyboard Shortcuts", tag: "Jump between pages without touching the mouse.", points: [
+    "Press a single letter — no modifier key — to jump straight to a page, as long as the panel is open and you're not typing in a field.",
+    "D Dashboard · T Tenant Snapshot · P Packages · A Artifact Overview · C Cloud Monitoring · E Edge Monitoring.",
+    "J Message Journey · I Idle iFlows · U Utility · L Locked Artifacts · M Manage Security · S Store Overview · F iFlow Runner.",
+    "R triggers Manual Refresh — the same as clicking the 🔄 Refresh button on the current page.",
+    "/ opens Global Search from anywhere in the panel.",
+    "Shortcuts are automatically ignored while typing in any input, textarea, or dropdown, and never trigger alongside Ctrl, Cmd, or Alt — so they stay out of the way of normal typing and browser shortcuts."
+  ]},
   { group: "Cross-tenant", icon: "💾", title: "Saved Views", tag: "Save a filter combination once, restore it in one click.", points: [
     "Available in Cloud Monitoring and Edge Monitoring.",
     "Save any combination of: time range, status, iFlow filter (multi-select), sender, receiver, and page size as a named view.",
@@ -632,11 +642,12 @@ const FEATURES = [
   { group: "Test automation", icon: "🧪", title: "Test Cases", tag: "Sync, Async and Match Payload Async — one shared login for all.", points: [
     "Two separate test types: Match Payload Async (max 1) and regular Test Cases (max 25) — both run against your SAP Integration Suite tenant directly from the browser.",
     "Shared Username and Password: one login saved per tenant — used automatically by every test case. Auto-fills on page open. Password stored using AES-GCM encryption, never in plain text.",
-    "Match Payload Async: a single GET endpoint is called once and its raw HTTP response is compared directly against the Expected Payload box — no MPL or iFlow processing status is checked, only the response body.",
+    "Match Payload Async: the endpoint's raw HTTP response is compared directly against the Expected Payload box — pass/fail is decided by HTTP status and payload match, with the related MPL entry looked up and shown for context.",
     "If using the bundled utility iFlow, this test depends on a value already being written to Data Store PAYLOAD, Entry ID match, before you run it — typically by your own business iFlow producing that result first. The utility iFlow only reads (and deletes) the entry; it doesn't generate one itself.",
     "Don't have an endpoint? Click Download Utility iFlow for a ready-made SAP Integration Suite iFlow package — import, deploy, point the test at it.",
-    "Regular Test Cases — Sync interface: full comparison — HTTP status, iFlow processing (MPL) status, and the response payload against Expected Payload.",
-    "Regular Test Cases — Async interface: checks only HTTP status and MPL status — the Expected Payload box is hidden and skipped, switching instantly when you change the dropdown.",
+    "Regular Test Cases — Sync interface: full comparison — HTTP status, iFlow processing (MPL) status, and the response payload against Expected Payload. MPL lookup starts checking sooner for sync calls, since SAP has already finished processing by the time it replies.",
+    "Regular Test Cases — Async interface: checks only HTTP status and MPL status — the Expected Payload box is hidden and skipped, switching instantly when you change the dropdown, and the Payload Match row points you to Match Payload Async if payload comparison is what you need.",
+    "iFlow Processing only ever shows a correlation or message ID once it's confirmed to match a real MPL entry — an HTTP failure (e.g. 500) no longer displays an unrelated ID next to \"Not Found\".",
     "Run Selected: tick any combination and run them in one click — each row shows a live ⏳ Running… status, then updates in place to ✅/❌.",
     "Result panel shows: HTTP status vs expected, iFlow processing status, payload match result, and every related iFlow triggered for that message with its own status — Correlation ID and Message ID are clickable links into SAP Integration Suiteing.",
     "Failed payload comparisons show exactly what's wrong, not just pass/fail — missing fields, extra fields, and fields with a different value than expected, broken down field by field for JSON and line by line for XML/text.",
@@ -644,7 +655,7 @@ const FEATURES = [
     "Test cases stored per tenant in chrome.storage.local — each tenant has its own independent set. Survives browser cache clear."
   ]},
 
-  { group: "Utilities", icon: "🛠", title: "Tools", tag: "XML, JSON, Base64 and URL utilities, right on the tenant page.", points: [
+  { group: "Utilities", icon: "🛠", title: "Utility", tag: "XML, JSON, Base64 and URL utilities, right on the tenant page.", points: [
     "Utilities: XML formatting, JSON formatting, Base64 encode/decode, URL encode/decode."
   ]},
   { group: "Utilities", icon: "📊", title: "Export Features", tag: "Real .xlsx files, predictable filenames, no external libraries.", points: [
@@ -678,7 +689,7 @@ const FEATURES = [
   { group: "Account", icon: "🔑", title: "License & Trial", tag: "30 days free, then a one-time license unlocks everything.", points: [
     "CPI Pulse includes a 30-day free trial — full access to all features from first install, no credit card required.",
     "Trial badge: shown below 'Integration Suite' in the sidebar — ⏳ Trial: X days left (amber), ✅ Licensed (green), 🔒 Trial Expired (red).",
-    "After 30 days: only Dashboard, Tools, and About remain accessible until a valid license key is entered.",
+    "After 30 days: only Dashboard, Utility, and About remain accessible until a valid license key is entered.",
     "For full license enquiries, contact integrationmonitorcim@gmail.com or visit cpimonitoring.github.io.",
     "Activate: About → License Status → enter your license key (format KEY-XXXXXXXX) → Activate. Full access restored permanently.",
     "Revoke: About → License Status → Remove License."
