@@ -579,7 +579,9 @@ const FEATURES = [
     "Overdue count is on-demand: click Check per queue, or Check All Overdue for the current page — nothing fetches automatically, so the tab opens fast even on tenants with thousands of messages.",
     "⚙️ Thresholds: set warn/critical thresholds globally or per individual queue — stored in chrome.storage.local per tenant, survives browser cache clear.",
     "View Messages per queue: loads 100 messages at a time with Previous/Next — even for queues with thousands of messages, only what's needed is rendered.",
-    "Data Store tab: every SAP data store as one row with entry count, an Overdue column, and a View Messages action — see Status (On Time/Overdue), write date, overdue date, and delete date per entry, with MPL ID linking straight into Message Journey.",
+    "Custom Tags on queues: add coloured tags to any queue, same system as Artifact Overview's tags — kept fully separate from artifact tags even if a name happens to match. Filter bar appears above the table once at least one queue has a tag.",
+    "Partner Directory: create, edit, and delete String Parameters (Pid/Id/Value) directly — edit turns a row's Value into an inline editable field with Save and Cancel, no need to open SAP's own Manage Configuration screen.",
+    "Data Store tab: every SAP data store as one row with entry count, an Overdue column, and a View Messages action — see Status (On Time/Overdue), write date, overdue date, and delete date per entry, with MPL ID linking straight into Message Journey. Long Entry IDs wrap onto a second line instead of stretching the table.",
     "Payload viewer per entry: decodes SAP's base64-encoded ZIP payload format into a readable body and headers, with Copy and Download for each.",
     "Bulk delete for Data Stores: select multiple stores (or all of them) and delete them in one action, or drill into a single store and bulk-delete just its entries — filterable to Overdue or On Time only first. A typed confirmation is required before anything is deleted, since this can't be undone.",
     "Total Stores and total Overdue entry counts shown at the top of the Data Store tab, updated on every refresh.",
@@ -626,6 +628,14 @@ const FEATURES = [
     "Clear buttons: remove individual or all registered environments.",
     "Cloud only — blocked in Edge context."
   ]},
+  { group: "Cross-tenant", icon: "📸", title: "Tenant Snapshot", tag: "One page, every environment, everything that matters.", points: [
+    "A fuller picture than Compare Runtime above: packages/artifacts, Locked Artifacts, JMS Queues, Certificates, Data Store, and Security Material — all fetched and shown together for whichever environment tab is selected.",
+    "New: Current Tenant tab, and now the default tab — shows the full snapshot for whichever tenant this browser tab is currently on, with no registration needed at all.",
+    "DEV, TEST, PREPROD, and PROD tabs alongside Current Tenant — same registration mechanism as Compare Runtime (open the tenant in its own tab, register it once), each tab showing that environment's own full snapshot.",
+    "Operational Metrics: a manual iFlow message snapshot pulled from MPL for the Current Tenant tab — Load 1h Snapshot and Load 24h Snapshot buttons (24h only available on Low/Medium volume tenants, to avoid an overly expensive query on busier ones), plus Clear Metrics Cache.",
+    "Refresh, Export CSV, and Export Excel for whichever tab is active.",
+    "Cloud only — blocked in Edge context."
+  ]},
   { group: "Cross-tenant", icon: "🌍", title: "Global Search", tag: "One box across eight categories, with a link straight to each result.", points: [
     "Searches across eight categories in a single search box: Runtime Artifacts, JMS Queues, Certificates, Credentials / Security Material, Data Stores, Packages, iFlow Runner test cases, and Partner Directory.",
     "Loads all data once when the page opens — subsequent searches filter in-memory instantly without additional API calls.",
@@ -654,6 +664,7 @@ const FEATURES = [
     "Match Payload Async: the endpoint's raw HTTP response is compared directly against the Expected Payload box — pass/fail is decided by HTTP status and payload match, with the related MPL entry looked up and shown for context.",
     "If using the bundled utility iFlow, this test depends on a value already being written to Data Store PAYLOAD, Entry ID match, before you run it — typically by your own business iFlow producing that result first. The utility iFlow only reads (and deletes) the entry; it doesn't generate one itself.",
     "Don't have an endpoint? Click Download Utility iFlow for a ready-made SAP Integration Suite iFlow package — import, deploy, point the test at it.",
+    "Create Test Case directly from Artifact Overview's endpoint popup: for the bundled UTILITY_MATCH_PAYLOAD iFlow specifically, this automatically creates a Match Payload Async test case (with demo Expected Payload pre-filled) instead of a regular one, and shows \"Test Case Exists — Go to It\" if one's already been created.",
     "Regular Test Cases — Sync interface: full comparison — HTTP status, iFlow processing (MPL) status, and the response payload against Expected Payload. MPL lookup starts checking sooner for sync calls, since SAP has already finished processing by the time it replies.",
     "Regular Test Cases — Async interface: checks only HTTP status and MPL status — the Expected Payload box is hidden and skipped, switching instantly when you change the dropdown, and the Payload Match row points you to Match Payload Async if payload comparison is what you need.",
     "iFlow Processing only ever shows a correlation or message ID once it's confirmed to match a real MPL entry — an HTTP failure (e.g. 500) no longer displays an unrelated ID next to \"Not Found\".",
